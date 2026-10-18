@@ -1,0 +1,9 @@
+out/
+logs/
+dados_origem/
+bin/
+*.class
+.idea/
+.settings/
+.classpath
+.project
