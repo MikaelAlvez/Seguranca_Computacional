@@ -1,0 +1,95 @@
+
+################ Q1 CASO 3 - entrada inválida e falha de autenticação ################
+>>> 3a) nome inexistente (servidor99)
+[02:07:38.397] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=0e35a2af284f2270)
+[02:07:38.566] [dns-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:38.627] [dns-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ERRO Erro na entrada de dados. Tente outra vez!
+[02:07:38.642] [dns-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] QUERY servidor99 | pacote=0e35a2af284f2270.C.1.BVgsMPdcKXC1keu8U6c...(135 chars)
+[02:07:38.642] [dns-cliente-C2] INFO  O servidor rejeitou a consulta: Erro na entrada de dados. Tente outra vez!
+[02:07:38.642] [dns-cliente-C2] INFO  Tabela local: {}
+
+>>> 3b) formato inválido ('ser vidor!')
+[02:07:38.913] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=bce4b04a3721695c)
+[02:07:38.947] [dns-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:38.980] [dns-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ERRO Erro na entrada de dados. Tente outra vez!
+[02:07:39.002] [dns-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] QUERY ser vidor! | pacote=bce4b04a3721695c.C.1.1X1XFDiGA7hsA3cUZUD...(135 chars)
+[02:07:39.003] [dns-cliente-C2] INFO  O servidor rejeitou a consulta: Erro na entrada de dados. Tente outra vez!
+[02:07:39.003] [dns-cliente-C2] INFO  Tabela local: {}
+
+>>> 3c) requisição com HMAC corrompido
+[02:07:39.244] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=8a3e3545b222d2c3)
+[02:07:39.272] [dns-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:39.320] [dns-cliente-C2] SEGUR ENVIADO  -> /127.0.0.1:5300 pacote ADULTERADO (MAC_CORROMPIDO) para teste: QUERY servidor1
+[02:07:42.320] [dns-cliente-C2] ERRO  Sem resposta do DNS em 3 s — o servidor descarta pacotes com HMAC/cifra inválidos sem responder.
+[02:07:42.321] [dns-cliente-C2] INFO  Tabela local: {}
+
+>>> 3c2) requisição com TEXTO CIFRADO adulterado no canal (falha de cifra/integridade)
+[02:07:42.561] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=8d6897b71180cc48)
+[02:07:42.601] [dns-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:42.646] [dns-cliente-C2] SEGUR ENVIADO  -> /127.0.0.1:5300 pacote ADULTERADO (CIFRADO_ADULTERADO) para teste: QUERY servidor1
+[02:07:45.647] [dns-cliente-C2] ERRO  Sem resposta do DNS em 3 s — o servidor descarta pacotes com HMAC/cifra inválidos sem responder.
+[02:07:45.648] [dns-cliente-C2] INFO  Tabela local: {}
+
+>>> 3c3) handshake com cifra RSA corrompida (o servidor não consegue decifrar o KEYX)
+[02:07:45.891] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=cdc4c97c5f4f6172)
+[02:07:47.920] [dns-cliente-C2] ERRO  Sem resposta do servidor (tentativa 1/3)
+[02:07:49.925] [dns-cliente-C2] ERRO  Sem resposta do servidor (tentativa 2/3)
+[02:07:51.928] [dns-cliente-C2] ERRO  Sem resposta do servidor (tentativa 3/3)
+Handshake com cifra RSA corrompida: o servidor descartou o KEYX e não respondeu (servidor sem resposta após 3 tentativas)
+
+>>> 3d) cliente comum tenta UPDATE (sem credencial de registrador)
+[02:07:52.207] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=6e2b178f54557d1e)
+[02:07:52.250] [dns-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:52.276] [dns-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ERRO NAO_AUTORIZADO
+[02:07:52.291] [dns-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE servidor1 6.6.6.6 | pacote=6e2b178f54557d1e.C.1.I1N+dDyDaXa6izrAMlT...(135 chars)
+[02:07:52.291] [dns-cliente-C2] INFO  Resposta do DNS ao UPDATE: ERRO NAO_AUTORIZADO
+[02:07:52.291] [dns-cliente-C2] INFO  Tabela local: {}
+
+>>> 3e) consulta normal ainda funciona (servidor não foi afetado)
+[02:07:52.564] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=a25ae36e13bd9a6b)
+[02:07:52.598] [dns-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:52.636] [dns-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ANSWER servidor1 192.168.0.10
+[02:07:52.650] [dns-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] QUERY servidor1 | pacote=a25ae36e13bd9a6b.C.1./PQuOv4YcLXddh71Rdo...(115 chars)
+[02:07:52.650] [dns-cliente-C2] INFO  RESOLUÇÃO VALIDADA: servidor1 -> 192.168.0.10
+[02:07:52.652] [dns-cliente-C2] INFO  Tabela local: {servidor1=192.168.0.10}
+
+----- logs/dns-servidor.log -----
+===== nova execução: 2026-10-18T02:07:36.684348743 =====
+[02:07:36.726] [dns-servidor] INFO  Mapa inicial carregado com 10 nomes (servidor1 -> 192.168.0.10 ... servidor10 -> 192.168.0.100)
+[02:07:36.748] [dns-servidor] INFO  Servidor UDP pronto na porta 5300 (RSA-2048 gerado; aguardando handshakes)
+[02:07:38.262] [dns-servidor] INFO  HELLO de /127.0.0.1:37341 -> chave pública RSA enviada
+[02:07:38.496] [dns-servidor] INFO  Handshake: sessão 0e35a2af284f2270 criada para /127.0.0.1:37341 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:38.573] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:37341 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=0e35a2af284f2270.S.1.JuYRA2dlhnC5LZPI4dR...(115 chars)
+[02:07:38.611] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:37341 [HMAC OK, sessão 0e35a2af284f2270] QUERY servidor99
+[02:07:38.622] [dns-servidor] ERRO  Erro na entrada de dados. Tente outra vez! (nome inexistente: servidor99)
+[02:07:38.635] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:37341 [AES-CBC+HMAC] ERRO Erro na entrada de dados. Tente outra vez! | pacote=0e35a2af284f2270.S.2.jePr2C6ZZL5Pkq0u57y...(155 chars)
+[02:07:38.803] [dns-servidor] INFO  HELLO de /127.0.0.1:48953 -> chave pública RSA enviada
+[02:07:38.933] [dns-servidor] INFO  Handshake: sessão bce4b04a3721695c criada para /127.0.0.1:48953 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:38.941] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:48953 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=bce4b04a3721695c.S.1.mqztUPXIg8PwE0gOdAL...(115 chars)
+[02:07:38.978] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:48953 [HMAC OK, sessão bce4b04a3721695c] QUERY ser vidor!
+[02:07:38.978] [dns-servidor] ERRO  Erro na entrada de dados. Tente outra vez! (formato de consulta inválido)
+[02:07:38.983] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:48953 [AES-CBC+HMAC] ERRO Erro na entrada de dados. Tente outra vez! | pacote=bce4b04a3721695c.S.2.ksirZnQHccWRE7WXdgm...(155 chars)
+[02:07:39.135] [dns-servidor] INFO  HELLO de /127.0.0.1:57236 -> chave pública RSA enviada
+[02:07:39.257] [dns-servidor] INFO  Handshake: sessão 8a3e3545b222d2c3 criada para /127.0.0.1:57236 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:39.260] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:57236 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=8a3e3545b222d2c3.S.1.So55boC+k3KFF5a6uvO...(115 chars)
+[02:07:39.308] [dns-servidor] SEGUR FALHA DE INTEGRIDADE em pacote de /127.0.0.1:57236 (HMAC inválido: mensagem adulterada ou sem a chave correta) -> pacote UDP DESCARTADO sem processar
+[02:07:42.454] [dns-servidor] INFO  HELLO de /127.0.0.1:59989 -> chave pública RSA enviada
+[02:07:42.584] [dns-servidor] INFO  Handshake: sessão 8d6897b71180cc48 criada para /127.0.0.1:59989 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:42.591] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:59989 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=8d6897b71180cc48.S.1.6R8xZmdGdKkmBSJP03n...(115 chars)
+[02:07:42.639] [dns-servidor] SEGUR FALHA DE INTEGRIDADE em pacote de /127.0.0.1:59989 (HMAC inválido: mensagem adulterada ou sem a chave correta) -> pacote UDP DESCARTADO sem processar
+[02:07:45.783] [dns-servidor] INFO  HELLO de /127.0.0.1:40074 -> chave pública RSA enviada
+[02:07:45.913] [dns-servidor] SEGUR FALHA NO HANDSHAKE de /127.0.0.1:40074: erro de decifragem RSA no handshake -> descartado
+[02:07:47.923] [dns-servidor] SEGUR FALHA NO HANDSHAKE de /127.0.0.1:40074: erro de decifragem RSA no handshake -> descartado
+[02:07:49.928] [dns-servidor] SEGUR FALHA NO HANDSHAKE de /127.0.0.1:40074: erro de decifragem RSA no handshake -> descartado
+[02:07:52.085] [dns-servidor] INFO  HELLO de /127.0.0.1:47650 -> chave pública RSA enviada
+[02:07:52.230] [dns-servidor] INFO  Handshake: sessão 6e2b178f54557d1e criada para /127.0.0.1:47650 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:52.240] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47650 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=6e2b178f54557d1e.S.1.+qMg9qQiQRNdgNUFCXT...(115 chars)
+[02:07:52.274] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:47650 [HMAC OK, sessão 6e2b178f54557d1e] UPDATE servidor1 6.6.6.6
+[02:07:52.274] [dns-servidor] SEGUR UPDATE NEGADO: sessão 6e2b178f54557d1e não possui credencial de registrador
+[02:07:52.275] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47650 [AES-CBC+HMAC] ERRO NAO_AUTORIZADO | pacote=6e2b178f54557d1e.S.2.+O/ZoQYkt9jrCb5u/PU...(135 chars)
+[02:07:52.440] [dns-servidor] INFO  HELLO de /127.0.0.1:34828 -> chave pública RSA enviada
+[02:07:52.580] [dns-servidor] INFO  Handshake: sessão a25ae36e13bd9a6b criada para /127.0.0.1:34828 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:52.582] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:34828 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=a25ae36e13bd9a6b.S.1.TFG9xiXHAnqC+QGxEDG...(115 chars)
+[02:07:52.628] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:34828 [HMAC OK, sessão a25ae36e13bd9a6b] QUERY servidor1
+[02:07:52.630] [dns-servidor] INFO  Resolução: servidor1 -> 192.168.0.10
+[02:07:52.643] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:34828 [AES-CBC+HMAC] ANSWER servidor1 192.168.0.10 | pacote=a25ae36e13bd9a6b.S.2.bGJEo9xvohFr1zhrzyH...(135 chars)

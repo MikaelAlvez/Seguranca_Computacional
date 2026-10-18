@@ -1,0 +1,19 @@
+
+################ Q1 CASO 1 - consulta servidor1 ################
+[02:07:16.620] [dns-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=0173b1dde997b97b)
+[02:07:16.768] [dns-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:16.834] [dns-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] QUERY servidor1 | pacote=0173b1dde997b97b.C.1.orszbQDT67rC13qcLt1...(115 chars)
+[02:07:16.841] [dns-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ANSWER servidor1 192.168.0.10
+[02:07:16.844] [dns-cliente-C1] INFO  RESOLUÇÃO VALIDADA: servidor1 -> 192.168.0.10
+[02:07:16.844] [dns-cliente-C1] INFO  Tabela local: {servidor1=192.168.0.10}
+
+----- logs/dns-servidor.log -----
+===== nova execução: 2026-10-18T02:07:14.965436006 =====
+[02:07:14.999] [dns-servidor] INFO  Mapa inicial carregado com 10 nomes (servidor1 -> 192.168.0.10 ... servidor10 -> 192.168.0.100)
+[02:07:15.018] [dns-servidor] INFO  Servidor UDP pronto na porta 5300 (RSA-2048 gerado; aguardando handshakes)
+[02:07:16.524] [dns-servidor] INFO  HELLO de /127.0.0.1:56722 -> chave pública RSA enviada
+[02:07:16.708] [dns-servidor] INFO  Handshake: sessão 0173b1dde997b97b criada para /127.0.0.1:56722 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:16.759] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:56722 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=0173b1dde997b97b.S.1.kV3ixiGuLRh6rWb4YaA...(115 chars)
+[02:07:16.825] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:56722 [HMAC OK, sessão 0173b1dde997b97b] QUERY servidor1
+[02:07:16.827] [dns-servidor] INFO  Resolução: servidor1 -> 192.168.0.10
+[02:07:16.840] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:56722 [AES-CBC+HMAC] ANSWER servidor1 192.168.0.10 | pacote=0173b1dde997b97b.S.2./B9m7wQIwaSLD8OWCKE...(135 chars)

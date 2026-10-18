@@ -1,0 +1,131 @@
+
+################ Q2 - TESTE COMPLETO: informações válidas e inválidas ################
+
+################ PARTE 1: matriz de protocolo (TesteQ2) ################
+
+=== A) DESCOBERTA VÁLIDA (diretório) ===
+V01   DISCOVER|Calcular soma                                     esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+V02   DISCOVER|Calcular subtração                                esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+V03   DISCOVER|Calcular multiplicação                            esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+V04   DISCOVER|Calcular divisão                                  esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+V05   DISCOVER|calcular SOMA (maiúsculas/minúsculas)             esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+V06   DISCOVER|'  Calcular   soma  ' (espaços extras)            esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+V07   DISCOVER|Calcular subtracao (sem acento)                   esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+
+=== B) ROUND ROBIN (6 consultas seguidas) ===
+      primeiro da lista em cada consulta: [S2, S3, S1, S2, S3, S1]
+V08   cada servidor aparece em 1º lugar 2 vezes em 6             esperado={S1=2, S2=2, S3=2}                 obtido={S1=2, S2=2, S3=2}                 OK
+V09   a ordem se repete de 3 em 3 (alternância cíclica)          esperado=true                               obtido=true                               OK
+
+=== C) CÁLCULOS VÁLIDOS direto no S1 ===
+V10   CALC|SOMA|10|20                                            esperado=RESULT|30|S1                       obtido=RESULT|30|S1                       OK
+V11   CALC|SUBTRACAO|7|2                                         esperado=RESULT|5|S1                        obtido=RESULT|5|S1                        OK
+V12   CALC|MULTIPLICACAO|5|4                                     esperado=RESULT|20|S1                       obtido=RESULT|20|S1                       OK
+V13   CALC|DIVISAO|9|4                                           esperado=RESULT|2.25|S1                     obtido=RESULT|2.25|S1                     OK
+V14   CALC|DIVISAO|10|2                                          esperado=RESULT|5|S1                        obtido=RESULT|5|S1                        OK
+V15   CALC|DIVISAO|1|3                                           esperado=RESULT|0.3333333333|S1             obtido=RESULT|0.3333333333|S1             OK
+V16   CALC|SOMA|7.5|2.25 (decimais)                              esperado=RESULT|9.75|S1                     obtido=RESULT|9.75|S1                     OK
+V17   CALC|MULTIPLICACAO|-3|4 (negativo)                         esperado=RESULT|-12|S1                      obtido=RESULT|-12|S1                      OK
+V18   CALC|SOMA|0.1|0.2 (sem erro de ponto flutuante)            esperado=RESULT|0.3|S1                      obtido=RESULT|0.3|S1                      OK
+V19   CALC|SOMA|99999999999999999999|1 (número enorme)           esperado=RESULT|100000000000000000000|S1    obtido=RESULT|100000000000000000000|S1    OK
+V20   CALC|SUBTRACAO|5|5 (resultado zero)                        esperado=RESULT|0|S1                        obtido=RESULT|0|S1                        OK
+
+=== D) CÁLCULOS INVÁLIDOS no S1 ===
+I01   CALC|DIVISAO|10|0                                          esperado=ERRO|Divisão por zero não é per... obtido=ERRO|Divisão por zero não é per... OK
+I02   CALC|SOMA|abc|1 (operando não numérico)                    esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I03   CALC|SOMA|1| (operando vazio)                              esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I04   CALC|SOMA|1;2|3 (estilo injeção)                           esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I05   CALC|MODULO|10|3 (operação inexistente)                    esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I06   CALC|SOMA|1 (falta operando)                               esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I07   CALC|SOMA|1|2|3 (campo a mais)                             esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I08   FOO (comando desconhecido)                                 esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I09    (mensagem vazia)                                          esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I10   S1 segue funcionando após os erros: CALC|SOMA|1|1          esperado=RESULT|2|S1                        obtido=RESULT|2|S1                        OK
+
+=== E) DESCOBERTA INVÁLIDA ===
+I11   DISCOVER|Calcular modulo (serviço inexistente)             esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I12   DISCOVER| (serviço vazio)                                  esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I13   DISCOVER (sem campo de serviço)                            esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I14   DISCOVER|a|b (campo a mais)                                esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I15   DISCOVER|Calcular soma; DROP TABLE (injeção)               esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I16   PING (comando desconhecido)                                esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I17    (mensagem vazia)                                          esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+
+=== F) REGISTRO INVÁLIDO / NÃO AUTORIZADO (o diretório NÃO pode mudar) ===
+I18   REGISTER por cliente comum (sem credencial)                esperado=ERRO|NAO_AUTORIZADO                obtido=ERRO|NAO_AUTORIZADO                OK
+I19   REGISTER com token errado                                  esperado=ERRO|NAO_AUTORIZADO                obtido=ERRO|NAO_AUTORIZADO                OK
+I20   REGISTER|S9|127.0.0.1|7109 (falta o campo de serviços)     esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I21   REGISTER|S 9|127.0.0.1|7109|Calcular potencia (nome inv... esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I22   REGISTER|S9||7109|Calcular potencia (host vazio)           esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I23   REGISTER|S9|127.0.0.1|abc|Calcular potencia (porta não ... esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I24   REGISTER|S9|127.0.0.1|0|Calcular potencia (porta 0)        esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I25   REGISTER|S9|127.0.0.1|70000|Calcular potencia (porta > ... esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I26   REGISTER|S9|127.0.0.1|7109| (lista de serviços vazia)      esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I27   REGISTER|S9|127.0.0.1|7109|;; (serviços só com separado... esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+I28   diretório inalterado: DISCOVER|Calcular soma               esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+I29   'Calcular potencia' continua inexistente                   esperado=ERRO|Erro na entrada de dados. ... obtido=ERRO|Erro na entrada de dados. ... OK
+
+=== G) REGISTRO VÁLIDO e SERVIDOR ATIVO x INATIVO (lease de 15 s) ===
+V21   REGISTER|S9|...|Calcular potencia (autorizado)             esperado=OK|REGISTRADO                      obtido=OK|REGISTRADO                      OK
+V22   DISCOVER|Calcular potencia (S9 ativo)                      esperado=OK[S9]                             obtido=OK[S9]                             OK
+      aguardando 16 s: S9 não renova o registro; S1, S2 e S3 renovam a cada 5 s...
+V23   DISCOVER|Calcular potencia (S9 inativo)                    esperado=OK|                                obtido=OK|                                OK
+V24   S1, S2, S3 seguem ativos (heartbeat)                       esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+
+=== H) FALHAS DE INTEGRIDADE / CIFRA / HANDSHAKE (a conexão deve ser ENCERRADA) ===
+S01   diretório: HMAC corrompido                                 esperado=<conexão encerrada>                obtido=<conexão encerrada>                OK
+S02   diretório: texto cifrado adulterado                        esperado=<conexão encerrada>                obtido=<conexão encerrada>                OK
+S03   diretório: SHA-256 sem chave no lugar do HMAC              esperado=<conexão encerrada>                obtido=<conexão encerrada>                OK
+S04   S1: HMAC corrompido                                        esperado=<conexão encerrada>                obtido=<conexão encerrada>                OK
+S05   replay: 1º pacote é aceito                                 esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+S06   replay: 2º pacote idêntico encerra a conexão               esperado=<conexão encerrada>                obtido=<conexão encerrada>                OK
+S07   diretório: handshake com cifra RSA corrompida              esperado=<handshake recusado>               obtido=<handshake recusado>               OK
+S08   S1: handshake com cifra RSA corrompida                     esperado=<handshake recusado>               obtido=<handshake recusado>               OK
+S09   diretório: lixo no lugar do handshake                      esperado=<conexão encerrada>                obtido=<conexão encerrada>                OK
+S10   S1: lixo no lugar do handshake                             esperado=<conexão encerrada>                obtido=<conexão encerrada>                OK
+S11   diretório segue funcionando após os ataques                esperado=OK[S1,S2,S3]                       obtido=OK[S1,S2,S3]                       OK
+S12   S1 segue funcionando após os ataques                       esperado=RESULT|3|S1                        obtido=RESULT|3|S1                        OK
+
+=== RESULTADO: 65/65 verificações passaram ===
+
+################ PARTE 2: cliente REAL (ClienteCalc), expressões válidas e inválidas ################
+--- expressão: '10 + 20'
+[02:21:00.042] [calc-cliente-C1] INFO  RESULTADO: 10 + 20 = 30  (calculado por S1 em canal seguro AES+HMAC)
+--- expressão: '7 - 2'
+[02:21:00.477] [calc-cliente-C1] INFO  RESULTADO: 7 - 2 = 5  (calculado por S2 em canal seguro AES+HMAC)
+--- expressão: '5 * 4'
+[02:21:00.862] [calc-cliente-C1] INFO  RESULTADO: 5 * 4 = 20  (calculado por S3 em canal seguro AES+HMAC)
+--- expressão: '9 / 4'
+[02:21:01.388] [calc-cliente-C1] INFO  RESULTADO: 9 / 4 = 2.25  (calculado por S1 em canal seguro AES+HMAC)
+--- expressão: '7.5 + 2.25'
+[02:21:01.766] [calc-cliente-C1] INFO  RESULTADO: 7.5 + 2.25 = 9.75  (calculado por S2 em canal seguro AES+HMAC)
+--- expressão: '-3 * 4'
+[02:21:02.219] [calc-cliente-C1] INFO  RESULTADO: -3 * 4 = -12  (calculado por S3 em canal seguro AES+HMAC)
+--- expressão: '10/2'
+[02:21:02.591] [calc-cliente-C1] INFO  RESULTADO: 10/2 = 5  (calculado por S1 em canal seguro AES+HMAC)
+--- expressão: '10 / 0'
+[02:21:02.953] [calc-cliente-C1] ERRO  Resposta do servidor S2: Divisão por zero não é permitida
+--- expressão: '10 % 3'
+[02:21:03.323] [calc-cliente-C1] ERRO  Erro na entrada de dados. Tente outra vez!
+--- expressão: 'dez mais vinte'
+[02:21:03.448] [calc-cliente-C1] ERRO  Erro na entrada de dados. Tente outra vez! (expressão inválida: 'dez mais vinte')
+--- expressão: '10 +'
+[02:21:03.604] [calc-cliente-C1] ERRO  Erro na entrada de dados. Tente outra vez! (expressão inválida: '10 +')
+--- expressão: ''
+[02:21:03.755] [calc-cliente-C1] ERRO  Erro na entrada de dados. Tente outra vez! (expressão inválida: '')
+--- descobrir serviço válido e inválido
+[02:21:04.112] [calc-cliente-C1] INFO  DESCOBERTA 'Calcular soma': [S3@127.0.0.1:7103, S1@127.0.0.1:7101, S2@127.0.0.1:7102] (lista autenticada pelo HMAC do diretório)
+[02:21:04.129] [calc-cliente-C1] INFO  DESCOBERTA 'Calcular multiplicação': [S1@127.0.0.1:7101, S2@127.0.0.1:7102, S3@127.0.0.1:7103] (lista autenticada pelo HMAC do diretório)
+[02:21:04.147] [calc-cliente-C1] ERRO  Erro na entrada de dados. Tente outra vez!
+[02:21:04.159] [calc-cliente-C1] ERRO  Erro na entrada de dados. Tente outra vez!
+
+################ PARTE 3: o que os componentes registraram ################
+Diretório: REGISTER negado ................ 2   (esperado: 2)
+Diretório: entradas rejeitadas ............ 19
+Diretório: eventos de segurança (SEGUR) ... 12   (HMAC/cifra/replay/handshake)
+S1: cálculos processados .................. 16
+S1: entradas rejeitadas ................... 8
+S1: eventos de segurança (SEGUR) .......... 4
+S2 / S3: cálculos processados ............. 2 / 2
+
+Código de saída do TesteQ2: 0 (0 = tudo passou)

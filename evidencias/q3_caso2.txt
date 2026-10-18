@@ -1,0 +1,15 @@
+
+################ Q3 CASO 2 - entrada inválida ################
+
+################ CASO 2 - entrada inválida (a rejeição ocorre antes de criptografia ou conexão) ################
+   ---- P1 (arquivo99.ext) ----
+   [21:24:52.187] [p2p-P1] ERRO  Erro na entrada de dados. Tente outra vez! (busca por 'arquivo99.ext' rejeitada; nenhum pacote foi propagado pelo anel)
+   ---- P4 (arquivoABC.ext) ----
+   [21:24:52.192] [p2p-P4] ERRO  Erro na entrada de dados. Tente outra vez! (busca por 'arquivoABC.ext' rejeitada; nenhum pacote foi propagado pelo anel)
+
+C2-01  P1 imprime 'Erro na entrada de dados. Tente outra vez!'            esperado=true                   obtido=true                   OK
+C2-02  P4 imprime 'Erro na entrada de dados. Tente outra vez!'            esperado=true                   obtido=true                   OK
+C2-03  P1 e P4 não abriram conexão nem fizeram criptografia               esperado=true                   obtido=true                   OK
+C2-04  nenhum pacote foi propagado: P0, P2, P3, P5 sem nenhuma linha nova esperado=true                   obtido=true                   OK
+
+=== RESULTADO: 4/4 verificações passaram ===

@@ -1,0 +1,124 @@
+
+################ Q2 CASO 2 - chamada de serviço com round robin ################
+>>> 1ª chamada, Cliente 1: 10 + 20   (esperado: S1)
+[02:01:03.916] [calc-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=cceb2fedbbc0ac66)
+[02:01:03.969] [calc-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:04.018] [calc-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] DISCOVER|Calcular soma | pacote=cceb2fedbbc0ac66.C.1.gqMCnUQF0gGr7P+WbbT...(135 chars)
+[02:01:04.030] [calc-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|S1,127.0.0.1,7101;S2,127.0.0.1,7102
+[02:01:04.039] [calc-cliente-C1] INFO  DESCOBERTA 'Calcular soma': [S1@127.0.0.1:7101, S2@127.0.0.1:7102] (lista autenticada pelo HMAC do diretório)
+[02:01:04.088] [calc-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7101 (sid=c511679f3c7bee1c)
+[02:01:04.091] [calc-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7101
+[02:01:04.092] [calc-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:7101 [AES-CBC+HMAC] CALC|SOMA|10|20 | pacote=c511679f3c7bee1c.C.1.x7mIEWbpkNGu2tk9/ll...(115 chars)
+[02:01:04.123] [calc-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:7101 [HMAC OK] RESULT|30|S1
+[02:01:04.125] [calc-cliente-C1] INFO  RESULTADO: 10 + 20 = 30  (calculado por S1 em canal seguro AES+HMAC)
+
+>>> 2ª chamada, Cliente 2: 5 * 4     (esperado: S2)
+[02:01:04.382] [calc-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=f4142295e6bfc61b)
+[02:01:04.418] [calc-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:04.469] [calc-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] DISCOVER|Calcular multiplicação | pacote=f4142295e6bfc61b.C.1.ol+9Pe8XSbfi02PLnuS...(155 chars)
+[02:01:04.473] [calc-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|S2,127.0.0.1,7102;S1,127.0.0.1,7101
+[02:01:04.486] [calc-cliente-C2] INFO  DESCOBERTA 'Calcular multiplicação': [S2@127.0.0.1:7102, S1@127.0.0.1:7101] (lista autenticada pelo HMAC do diretório)
+[02:01:04.518] [calc-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7102 (sid=ab57ea3b40312eaa)
+[02:01:04.534] [calc-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7102
+[02:01:04.535] [calc-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:7102 [AES-CBC+HMAC] CALC|MULTIPLICACAO|5|4 | pacote=ab57ea3b40312eaa.C.1.IcHNi3Hd+dd7As863Gz...(135 chars)
+[02:01:04.565] [calc-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:7102 [HMAC OK] RESULT|20|S2
+[02:01:04.566] [calc-cliente-C2] INFO  RESULTADO: 5 * 4 = 20  (calculado por S2 em canal seguro AES+HMAC)
+
+>>> mais 4 chamadas alternadas entre os clientes (e as 4 operações)
+[02:01:04.935] [calc-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=f68b91370c73ef33)
+[02:01:04.975] [calc-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:05.011] [calc-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] DISCOVER|Calcular subtração | pacote=f68b91370c73ef33.C.1.BlOiFunlbtPdKP0UZAA...(135 chars)
+[02:01:05.011] [calc-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|S1,127.0.0.1,7101;S2,127.0.0.1,7102
+[02:01:05.028] [calc-cliente-C1] INFO  DESCOBERTA 'Calcular subtração': [S1@127.0.0.1:7101, S2@127.0.0.1:7102] (lista autenticada pelo HMAC do diretório)
+[02:01:05.038] [calc-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7101 (sid=11b4fcb0a7413f25)
+[02:01:05.050] [calc-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7101
+[02:01:05.057] [calc-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:7101 [AES-CBC+HMAC] CALC|SUBTRACAO|7|2 | pacote=11b4fcb0a7413f25.C.1.NF7MHvjM2hd8X0OptOv...(135 chars)
+[02:01:05.058] [calc-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:7101 [HMAC OK] RESULT|5|S1
+[02:01:05.058] [calc-cliente-C1] INFO  RESULTADO: 7 - 2 = 5  (calculado por S1 em canal seguro AES+HMAC)
+[02:01:05.323] [calc-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=b645b618a787cd55)
+[02:01:05.355] [calc-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:05.395] [calc-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] DISCOVER|Calcular divisão | pacote=b645b618a787cd55.C.1.J0xqgaaKWAhfxk+ulDq...(135 chars)
+[02:01:05.397] [calc-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|S2,127.0.0.1,7102;S1,127.0.0.1,7101
+[02:01:05.414] [calc-cliente-C2] INFO  DESCOBERTA 'Calcular divisão': [S2@127.0.0.1:7102, S1@127.0.0.1:7101] (lista autenticada pelo HMAC do diretório)
+[02:01:05.432] [calc-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7102 (sid=dc7ae87e1fb339d0)
+[02:01:05.434] [calc-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7102
+[02:01:05.435] [calc-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:7102 [AES-CBC+HMAC] CALC|DIVISAO|9|4 | pacote=dc7ae87e1fb339d0.C.1.LkiuSQ10vYvcnZ7aTe5...(135 chars)
+[02:01:05.449] [calc-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:7102 [HMAC OK] RESULT|2.25|S2
+[02:01:05.449] [calc-cliente-C2] INFO  RESULTADO: 9 / 4 = 2.25  (calculado por S2 em canal seguro AES+HMAC)
+[02:01:05.751] [calc-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=a30f020a7cf4d6e8)
+[02:01:05.787] [calc-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:05.815] [calc-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] DISCOVER|Calcular soma | pacote=a30f020a7cf4d6e8.C.1.IMpCHBQL0Z4TOER5+Gr...(135 chars)
+[02:01:05.821] [calc-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|S1,127.0.0.1,7101;S2,127.0.0.1,7102
+[02:01:05.832] [calc-cliente-C1] INFO  DESCOBERTA 'Calcular soma': [S1@127.0.0.1:7101, S2@127.0.0.1:7102] (lista autenticada pelo HMAC do diretório)
+[02:01:05.847] [calc-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7101 (sid=f620bd1940f76568)
+[02:01:05.856] [calc-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7101
+[02:01:05.858] [calc-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:7101 [AES-CBC+HMAC] CALC|SOMA|3|4 | pacote=f620bd1940f76568.C.1.huS4OK3/BiHucdEG7X6...(115 chars)
+[02:01:05.862] [calc-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:7101 [HMAC OK] RESULT|7|S1
+[02:01:05.862] [calc-cliente-C1] INFO  RESULTADO: 3 + 4 = 7  (calculado por S1 em canal seguro AES+HMAC)
+[02:01:06.143] [calc-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=48d56d13b9dea2a8)
+[02:01:06.172] [calc-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:06.207] [calc-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] DISCOVER|Calcular multiplicação | pacote=48d56d13b9dea2a8.C.1.vypMupNNEjO7d02+cPF...(155 chars)
+[02:01:06.209] [calc-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|S2,127.0.0.1,7102;S1,127.0.0.1,7101
+[02:01:06.223] [calc-cliente-C2] INFO  DESCOBERTA 'Calcular multiplicação': [S2@127.0.0.1:7102, S1@127.0.0.1:7101] (lista autenticada pelo HMAC do diretório)
+[02:01:06.240] [calc-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7102 (sid=0a7b58fbb280b73c)
+[02:01:06.241] [calc-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7102
+[02:01:06.242] [calc-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:7102 [AES-CBC+HMAC] CALC|MULTIPLICACAO|8|2 | pacote=0a7b58fbb280b73c.C.1.RxH2T1kNR4ZtyjsOnp1...(135 chars)
+[02:01:06.246] [calc-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:7102 [HMAC OK] RESULT|16|S2
+[02:01:06.246] [calc-cliente-C2] INFO  RESULTADO: 8 * 2 = 16  (calculado por S2 em canal seguro AES+HMAC)
+
+=================== RESUMO DA DISTRIBUIÇÃO ===================
+DISCOVER 'calcular soma' -> ordem [S1, S2] (round-robin)
+DISCOVER 'calcular multiplicacao' -> ordem [S2, S1] (round-robin)
+DISCOVER 'calcular subtracao' -> ordem [S1, S2] (round-robin)
+DISCOVER 'calcular divisao' -> ordem [S2, S1] (round-robin)
+DISCOVER 'calcular soma' -> ordem [S1, S2] (round-robin)
+DISCOVER 'calcular multiplicacao' -> ordem [S2, S1] (round-robin)
+S1 processou 3 cálculo(s) | S2 processou 3 cálculo(s)  (6 chamadas -> 3 para cada: distribuição proporcional)
+
+----- logs/calc-S1.log -----
+===== nova execução: 2026-10-18T02:01:00.634485244 =====
+[02:01:00.743] [calc-S1] INFO  Servidor de cálculo S1 pronto na porta 7101
+[02:01:01.782] [calc-S1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=8ba97ad231a648eb)
+[02:01:01.965] [calc-S1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:02.035] [calc-S1] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] REGISTER|S1|127.0.0.1|7101|Calcular soma;Calcular subtração;Calcular multiplicação;Calcula...(99 chars) | pacote=8ba97ad231a648eb.C.1.AXht6TxHBGnbuHeyrJv...(243 chars)
+[02:01:02.105] [calc-S1] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|REGISTRADO
+[02:01:02.105] [calc-S1] INFO  Registro no diretório: OK|REGISTRADO
+[02:01:04.090] [calc-S1] INFO  Handshake: chaves da sessão c511679f3c7bee1c decifradas com a chave privada RSA (cliente /127.0.0.1:45180)
+[02:01:04.095] [calc-S1] INFO  ENVIADO  -> /127.0.0.1:45180 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=c511679f3c7bee1c.S.1.IwEVvwJDgexW3P2Sgxu...(115 chars)
+[02:01:04.095] [calc-S1] INFO  RECEBIDO <- /127.0.0.1:45180 [HMAC OK] CALC|SOMA|10|20
+[02:01:04.122] [calc-S1] INFO  CÁLCULO: 10 SOMA 20 = 30 (processado por S1; total de cálculos atendidos por S1: 1)
+[02:01:04.126] [calc-S1] INFO  ENVIADO  -> /127.0.0.1:45180 [AES-CBC+HMAC] RESULT|30|S1 | pacote=c511679f3c7bee1c.S.2.vzhgq/yUXT8Hmgqzqmf...(115 chars)
+[02:01:05.046] [calc-S1] INFO  Handshake: chaves da sessão 11b4fcb0a7413f25 decifradas com a chave privada RSA (cliente /127.0.0.1:45184)
+[02:01:05.049] [calc-S1] INFO  ENVIADO  -> /127.0.0.1:45184 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=11b4fcb0a7413f25.S.1.5at6GZ5iSxBfuZ5NllW...(115 chars)
+[02:01:05.052] [calc-S1] INFO  RECEBIDO <- /127.0.0.1:45184 [HMAC OK] CALC|SUBTRACAO|7|2
+[02:01:05.052] [calc-S1] INFO  CÁLCULO: 7 SUBTRACAO 2 = 5 (processado por S1; total de cálculos atendidos por S1: 2)
+[02:01:05.060] [calc-S1] INFO  ENVIADO  -> /127.0.0.1:45184 [AES-CBC+HMAC] RESULT|5|S1 | pacote=11b4fcb0a7413f25.S.2.783py3xeCLGfl+gHcKT...(115 chars)
+[02:01:05.850] [calc-S1] INFO  Handshake: chaves da sessão f620bd1940f76568 decifradas com a chave privada RSA (cliente /127.0.0.1:45190)
+[02:01:05.854] [calc-S1] INFO  ENVIADO  -> /127.0.0.1:45190 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=f620bd1940f76568.S.1.BjF6Bj/0wln+iKGLNJZ...(115 chars)
+[02:01:05.860] [calc-S1] INFO  RECEBIDO <- /127.0.0.1:45190 [HMAC OK] CALC|SOMA|3|4
+[02:01:05.861] [calc-S1] INFO  CÁLCULO: 3 SOMA 4 = 7 (processado por S1; total de cálculos atendidos por S1: 3)
+[02:01:05.864] [calc-S1] INFO  ENVIADO  -> /127.0.0.1:45190 [AES-CBC+HMAC] RESULT|7|S1 | pacote=f620bd1940f76568.S.2.uAMhqgzT44hi2bm4Aak...(115 chars)
+
+----- logs/calc-S2.log -----
+===== nova execução: 2026-10-18T02:01:00.839142433 =====
+[02:01:00.900] [calc-S2] INFO  Servidor de cálculo S2 pronto na porta 7102
+[02:01:02.045] [calc-S2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:7000 (sid=0baeeda44ca1c6e4)
+[02:01:02.086] [calc-S2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:7000
+[02:01:02.136] [calc-S2] INFO  ENVIADO  -> /127.0.0.1:7000 [AES-CBC+HMAC] REGISTER|S2|127.0.0.1|7102|Calcular soma;Calcular subtração;Calcular multiplicação;Calcula...(99 chars) | pacote=0baeeda44ca1c6e4.C.1.hK0RVcq3sLlfHqSh4p4...(243 chars)
+[02:01:02.145] [calc-S2] INFO  RECEBIDO <- /127.0.0.1:7000 [HMAC OK] OK|REGISTRADO
+[02:01:02.145] [calc-S2] INFO  Registro no diretório: OK|REGISTRADO
+[02:01:04.532] [calc-S2] INFO  Handshake: chaves da sessão ab57ea3b40312eaa decifradas com a chave privada RSA (cliente /127.0.0.1:43908)
+[02:01:04.536] [calc-S2] INFO  ENVIADO  -> /127.0.0.1:43908 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=ab57ea3b40312eaa.S.1.rjDb+zi6bKOc9kv84DG...(115 chars)
+[02:01:04.537] [calc-S2] INFO  RECEBIDO <- /127.0.0.1:43908 [HMAC OK] CALC|MULTIPLICACAO|5|4
+[02:01:04.562] [calc-S2] INFO  CÁLCULO: 5 MULTIPLICACAO 4 = 20 (processado por S2; total de cálculos atendidos por S2: 1)
+[02:01:04.572] [calc-S2] INFO  ENVIADO  -> /127.0.0.1:43908 [AES-CBC+HMAC] RESULT|20|S2 | pacote=ab57ea3b40312eaa.S.2.Yf1dvcebvj24DQO1kyP...(115 chars)
+[02:01:05.433] [calc-S2] INFO  Handshake: chaves da sessão dc7ae87e1fb339d0 decifradas com a chave privada RSA (cliente /127.0.0.1:43922)
+[02:01:05.444] [calc-S2] INFO  ENVIADO  -> /127.0.0.1:43922 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=dc7ae87e1fb339d0.S.1.51YqQLBk73ndlYBtR4S...(115 chars)
+[02:01:05.445] [calc-S2] INFO  RECEBIDO <- /127.0.0.1:43922 [HMAC OK] CALC|DIVISAO|9|4
+[02:01:05.445] [calc-S2] INFO  CÁLCULO: 9 DIVISAO 4 = 2.25 (processado por S2; total de cálculos atendidos por S2: 2)
+[02:01:05.446] [calc-S2] INFO  ENVIADO  -> /127.0.0.1:43922 [AES-CBC+HMAC] RESULT|2.25|S2 | pacote=dc7ae87e1fb339d0.S.2.aPRyIXwniTc25JZQK00...(115 chars)
+[02:01:06.235] [calc-S2] INFO  Handshake: chaves da sessão 0a7b58fbb280b73c decifradas com a chave privada RSA (cliente /127.0.0.1:43924)
+[02:01:06.235] [calc-S2] INFO  ENVIADO  -> /127.0.0.1:43924 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=0a7b58fbb280b73c.S.1.amyLkxfmQ5WxpcNl5ZO...(115 chars)
+[02:01:06.243] [calc-S2] INFO  RECEBIDO <- /127.0.0.1:43924 [HMAC OK] CALC|MULTIPLICACAO|8|2
+[02:01:06.243] [calc-S2] INFO  CÁLCULO: 8 MULTIPLICACAO 2 = 16 (processado por S2; total de cálculos atendidos por S2: 3)
+[02:01:06.249] [calc-S2] INFO  ENVIADO  -> /127.0.0.1:43924 [AES-CBC+HMAC] RESULT|16|S2 | pacote=0a7b58fbb280b73c.S.2.8UHkPi0CRiGLCpEqN+G...(115 chars)

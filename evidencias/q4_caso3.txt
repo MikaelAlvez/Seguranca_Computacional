@@ -1,0 +1,62 @@
+
+################ Q4 CASO 3 - entrada inválida e erro de cifra na borda ################
+>>> 3a) nome fora do padrão: GET /arquivoXYZ.ext (a Origem NÃO deve ser consultada)
+[22:09:05.374] [cdn-cliente-C3] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=d028da485dfb5528)
+[22:09:05.532] [cdn-cliente-C3] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:09:05.588] [cdn-cliente-C3] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivoXYZ.ext | pacote=d028da485dfb5528.C.1.6J6dcw/Cr3R/GtjbOt/...(135 chars)
+[22:09:05.596] [cdn-cliente-C3] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 400 Bad Request\nErro: Erro na entrada de dados. Tente outra vez!
+[22:09:05.617] [cdn-cliente-C3] INFO  RESPOSTA para GET /arquivoXYZ.ext em 61.7 ms -> 400 Bad Request | Erro: Erro na entrada de dados. Tente outra vez!
+
+>>> 3b) cache normal: GET /arquivo20.ext (MISS), depois ATAQUE: GET com SHA-256 sem chave no lugar do HMAC
+[22:09:05.969] [cdn-cliente-C3] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=0689d0cb9dd88ee4)
+[22:09:06.025] [cdn-cliente-C3] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:09:06.086] [cdn-cliente-C3] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=0689d0cb9dd88ee4.C.1.Zm0uXK74vDrpxLUa4Pu...(135 chars)
+[22:09:06.427] [cdn-cliente-C3] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo...(1057 chars)
+[22:09:06.460] [cdn-cliente-C3] INFO  RESPOSTA para GET /arquivo20.ext em 403.9 ms -> 200 OK | Cache: MISS | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo20.ext | [v1] Conte...(1024 chars)
+[22:09:06.739] [cdn-cliente-C4] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=b4044304084d108f)
+[22:09:06.769] [cdn-cliente-C4] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:09:06.809] [cdn-cliente-C4] SEGUR ENVIADO  -> /127.0.0.1:8001 pacote ADULTERADO (HASH_SEM_CHAVE) para teste: GET /arquivo21.ext
+[22:09:06.809] [cdn-cliente-C4] ERRO  Conexão ENCERRADA pelo Edge (HMAC ausente/inválido) — nenhuma resposta recebida.
+
+>>> 3c) handshake com erro de decifragem RSA
+[22:09:07.077] [cdn-cliente-C5] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=3c499b5b74d8b7f4)
+[22:09:07.094] [cdn-cliente-C5] ERRO  Handshake/conexão com o Edge 127.0.0.1:8001 falhou: servidor encerrou a conexão durante o handshake (provável erro de decifragem RSA)
+
+>>> 3d) após os ataques, o cache continua íntegro: GET /arquivo20.ext deve ser HIT
+[22:09:07.348] [cdn-cliente-C3] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=9e3ec899b1c09133)
+[22:09:07.380] [cdn-cliente-C3] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:09:07.410] [cdn-cliente-C3] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=9e3ec899b1c09133.C.1.uQrNtjmI8/vn3y3N9vY...(135 chars)
+[22:09:07.420] [cdn-cliente-C3] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo ...(1056 chars)
+[22:09:07.443] [cdn-cliente-C3] INFO  RESPOSTA para GET /arquivo20.ext em 37.2 ms -> 200 OK | Cache: HIT | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo20.ext | [v1] Conte...(1024 chars)
+
+----- logs/cdn-edge-8001.log -----
+===== nova execução: 2026-10-18T22:09:02.627475480 =====
+[22:09:02.695] [cdn-edge-8001] INFO  Edge edge-8001 pronto na porta 8001 (cache vazio, TTL=10 s)
+[22:09:05.444] [cdn-edge-8001] INFO  Handshake: chaves da sessão d028da485dfb5528 decifradas com a chave privada RSA (cliente /127.0.0.1:48606)
+[22:09:05.511] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:48606 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=d028da485dfb5528.S.1.C3323pUxguEq4sWhF4V...(115 chars)
+[22:09:05.583] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:48606 [HMAC OK] GET /arquivoXYZ.ext
+[22:09:05.593] [cdn-edge-8001] ERRO  Erro na entrada de dados. Tente outra vez! (GET inválido '/arquivoXYZ.ext'; a Origem não foi consultada)
+[22:09:05.595] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:48606 [AES-CBC+HMAC] 400 Bad Request\nErro: Erro na entrada de dados. Tente outra vez! | pacote=d028da485dfb5528.S.2.J7rQ630RODegJ4Tom26...(199 chars)
+[22:09:05.945] [cdn-edge-8001] INFO  Handshake: chaves da sessão 0689d0cb9dd88ee4 decifradas com a chave privada RSA (cliente /127.0.0.1:48618)
+[22:09:05.946] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:48618 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=0689d0cb9dd88ee4.S.1.DSgJwCxwqhYQznQXM8j...(115 chars)
+[22:09:06.069] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:48618 [HMAC OK] GET /arquivo20.ext
+[22:09:06.070] [cdn-edge-8001] INFO  CACHE MISS: /arquivo20.ext -> abrindo canal TCP seguro com a Origem (AES+HMAC)
+[22:09:06.105] [cdn-edge-8001] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8000 (sid=a952244a3125cc96)
+[22:09:06.229] [cdn-edge-8001] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8000
+[22:09:06.230] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:8000 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=a952244a3125cc96.C.1.yaO2lE5ZVzp66ewq3kf...(135 chars)
+[22:09:06.386] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:8000 [HMAC OK] 200 OK\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo mestre do ar...(1045 chars)
+[22:09:06.413] [cdn-edge-8001] INFO  CACHE MISS resolvido: /arquivo20.ext baixado da Origem e salvo no cache em 316.91 ms (expira em 10 s)
+[22:09:06.422] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:48618 [AES-CBC+HMAC] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo...(1057 chars) | pacote=0689d0cb9dd88ee4.S.2.TE/hiHIAS0yT1rQL+Mu...(1523 chars)
+[22:09:06.718] [cdn-edge-8001] INFO  Handshake: chaves da sessão b4044304084d108f decifradas com a chave privada RSA (cliente /127.0.0.1:48628)
+[22:09:06.719] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:48628 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=b4044304084d108f.S.1.bztHS7MAonQHcy40ZSO...(115 chars)
+[22:09:06.799] [cdn-edge-8001] SEGUR RECEBIDO <- /127.0.0.1:48628 [HMAC/INTEGRIDADE FALHOU] HMAC inválido: mensagem adulterada ou sem a chave correta
+[22:09:06.799] [cdn-edge-8001] SEGUR ALERTA: mensagem sem HMAC válido (ou hash sem chave) de /127.0.0.1:48628 -> ENCERRANDO a conexão do socket; tabela de cache preservada (1 entradas)
+[22:09:07.064] [cdn-edge-8001] SEGUR ALERTA: handshake inválido de /127.0.0.1:48632 (erro de decifragem RSA no handshake) -> conexão encerrada; cache intacto
+[22:09:07.330] [cdn-edge-8001] INFO  Handshake: chaves da sessão 9e3ec899b1c09133 decifradas com a chave privada RSA (cliente /127.0.0.1:48638)
+[22:09:07.331] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:48638 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=9e3ec899b1c09133.S.1.kivnygFFS5x3Wb0wCaF...(115 chars)
+[22:09:07.407] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:48638 [HMAC OK] GET /arquivo20.ext
+[22:09:07.414] [cdn-edge-8001] INFO  CACHE HIT : /arquivo20.ext servido da memória em 0.00 ms
+[22:09:07.418] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:48638 [AES-CBC+HMAC] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo ...(1056 chars) | pacote=9e3ec899b1c09133.S.2.yQygI1EJJaq8VTddGjP...(1523 chars)
+
+----- a Origem só deve ter servido arquivo20 (nenhuma consulta de XYZ/21/22) -----
+[22:09:06.377] [cdn-origem] INFO  ORIGEM entregou /arquivo20.ext lido do disco (1024 bytes)

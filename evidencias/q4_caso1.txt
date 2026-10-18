@@ -1,0 +1,90 @@
+
+################ Q4 CASO 1 - cache HIT vs MISS em canal cifrado ################
+>>> Cliente do Nordeste (BR-NE): GET (MISS) e GET (HIT) no mesmo arquivo
+[22:08:33.083] [cdn-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5354 (sid=5757d5d7809c0070)
+[22:08:33.245] [cdn-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5354
+[22:08:33.306] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:5354 [AES-CBC+HMAC] ONDE|arquivo20.ext|BR-NE | pacote=5757d5d7809c0070.C.1.yx6VhYKST+uEkwbYSsD...(135 chars)
+[22:08:33.307] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:5354 [HMAC OK] EDGE|127.0.0.1|8001|edge-8001
+[22:08:33.307] [cdn-cliente-C1] INFO  ROUTER indicou o Edge edge-8001 (127.0.0.1:8001) para a região BR-NE
+[22:08:33.342] [cdn-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=fa954c0fabef8997)
+[22:08:33.461] [cdn-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:08:33.462] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=fa954c0fabef8997.C.1.UGS99AUdC/9I5ii8Ynf...(135 chars)
+[22:08:33.892] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo...(1057 chars)
+[22:08:33.924] [cdn-cliente-C1] INFO  RESPOSTA para GET /arquivo20.ext em 431.4 ms -> 200 OK | Cache: MISS | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo20.ext | [v1] Conte...(1024 chars)
+[22:08:33.929] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=fa954c0fabef8997.C.2.3BD/6YdPmjMbbMYKjei...(135 chars)
+[22:08:33.936] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo ...(1056 chars)
+[22:08:33.942] [cdn-cliente-C1] INFO  RESPOSTA para GET /arquivo20.ext em 11.2 ms -> 200 OK | Cache: HIT | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo20.ext | [v1] Conte...(1024 chars)
+
+>>> Cliente dos EUA (US): o GeoDNS o encaminha a OUTRO Edge (8003), que tem cache próprio (MISS)
+[22:08:34.230] [cdn-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5354 (sid=69c37a1db417741c)
+[22:08:34.267] [cdn-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5354
+[22:08:34.312] [cdn-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:5354 [AES-CBC+HMAC] ONDE|arquivo20.ext|US | pacote=69c37a1db417741c.C.1./U7TzVgGofSXQRGS+Ci...(135 chars)
+[22:08:34.321] [cdn-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5354 [HMAC OK] EDGE|127.0.0.1|8003|edge-8003
+[22:08:34.321] [cdn-cliente-C2] INFO  ROUTER indicou o Edge edge-8003 (127.0.0.1:8003) para a região US
+[22:08:34.356] [cdn-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8003 (sid=3d9fd01d5559e09d)
+[22:08:34.452] [cdn-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8003
+[22:08:34.453] [cdn-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:8003 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=3d9fd01d5559e09d.C.1.ih0GaaIuEWlEY+7z35M...(135 chars)
+[22:08:34.691] [cdn-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:8003 [HMAC OK] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo...(1057 chars)
+[22:08:34.707] [cdn-cliente-C2] INFO  RESPOSTA para GET /arquivo20.ext em 238.9 ms -> 200 OK | Cache: MISS | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo20.ext | [v1] Conte...(1024 chars)
+
+----- logs/cdn-edge-8001.log -----
+===== nova execução: 2026-10-18T22:08:31.037925304 =====
+[22:08:31.285] [cdn-edge-8001] INFO  Edge edge-8001 pronto na porta 8001 (cache vazio, TTL=10 s)
+[22:08:33.412] [cdn-edge-8001] INFO  Handshake: chaves da sessão fa954c0fabef8997 decifradas com a chave privada RSA (cliente /127.0.0.1:52856)
+[22:08:33.480] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:52856 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=fa954c0fabef8997.S.1.eVjhlKkDt9PVuMDPIgo...(115 chars)
+[22:08:33.499] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:52856 [HMAC OK] GET /arquivo20.ext
+[22:08:33.507] [cdn-edge-8001] INFO  CACHE MISS: /arquivo20.ext -> abrindo canal TCP seguro com a Origem (AES+HMAC)
+[22:08:33.548] [cdn-edge-8001] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8000 (sid=353c02cf487cf75c)
+[22:08:33.643] [cdn-edge-8001] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8000
+[22:08:33.644] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:8000 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=353c02cf487cf75c.C.1.bYH+xItknlMEOKv+G/T...(135 chars)
+[22:08:33.819] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:8000 [HMAC OK] 200 OK\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo mestre do ar...(1045 chars)
+[22:08:33.870] [cdn-edge-8001] INFO  CACHE MISS resolvido: /arquivo20.ext baixado da Origem e salvo no cache em 318.66 ms (expira em 10 s)
+[22:08:33.884] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:52856 [AES-CBC+HMAC] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo...(1057 chars) | pacote=fa954c0fabef8997.S.2.H1Cu0z8WkyrBWW0iUex...(1523 chars)
+[22:08:33.930] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:52856 [HMAC OK] GET /arquivo20.ext
+[22:08:33.932] [cdn-edge-8001] INFO  CACHE HIT : /arquivo20.ext servido da memória em 0.01 ms
+[22:08:33.941] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:52856 [AES-CBC+HMAC] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo ...(1056 chars) | pacote=fa954c0fabef8997.S.3.RBRxCknOfy0aU16LZme...(1523 chars)
+
+----- logs/cdn-edge-8003.log -----
+===== nova execução: 2026-10-18T22:08:31.803786716 =====
+[22:08:31.937] [cdn-edge-8003] INFO  Edge edge-8003 pronto na porta 8003 (cache vazio, TTL=10 s)
+[22:08:34.411] [cdn-edge-8003] INFO  Handshake: chaves da sessão 3d9fd01d5559e09d decifradas com a chave privada RSA (cliente /127.0.0.1:35580)
+[22:08:34.472] [cdn-edge-8003] INFO  ENVIADO  -> /127.0.0.1:35580 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=3d9fd01d5559e09d.S.1.SqAygYjMkb8S15C6al+...(115 chars)
+[22:08:34.480] [cdn-edge-8003] INFO  RECEBIDO <- /127.0.0.1:35580 [HMAC OK] GET /arquivo20.ext
+[22:08:34.482] [cdn-edge-8003] INFO  CACHE MISS: /arquivo20.ext -> abrindo canal TCP seguro com a Origem (AES+HMAC)
+[22:08:34.506] [cdn-edge-8003] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8000 (sid=ff80f10e937e5d1e)
+[22:08:34.507] [cdn-edge-8003] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8000
+[22:08:34.517] [cdn-edge-8003] INFO  ENVIADO  -> /127.0.0.1:8000 [AES-CBC+HMAC] GET /arquivo20.ext | pacote=ff80f10e937e5d1e.C.1.8vClMj1zUaScEP0yHjr...(135 chars)
+[22:08:34.643] [cdn-edge-8003] INFO  RECEBIDO <- /127.0.0.1:8000 [HMAC OK] 200 OK\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo mestre do ar...(1045 chars)
+[22:08:34.680] [cdn-edge-8003] INFO  CACHE MISS resolvido: /arquivo20.ext baixado da Origem e salvo no cache em 162.54 ms (expira em 10 s)
+[22:08:34.688] [cdn-edge-8003] INFO  ENVIADO  -> /127.0.0.1:35580 [AES-CBC+HMAC] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo...(1057 chars) | pacote=3d9fd01d5559e09d.S.2.tuywjZDom80WVbwHQol...(1523 chars)
+
+----- logs/cdn-origem.log -----
+===== nova execução: 2026-10-18T22:08:29.139648798 =====
+[22:08:32.766] [cdn-origem] INFO  Origem pronta: 1000 arquivos em 'dados_origem/' (1000 restaurados para a versão v1)
+[22:08:32.780] [cdn-origem] INFO  Origin Server escutando TCP na porta 8000 (latência simulada: 120 ms)
+[22:08:33.604] [cdn-origem] INFO  Handshake: chaves da sessão 353c02cf487cf75c decifradas com a chave privada RSA (cliente /127.0.0.1:47342)
+[22:08:33.658] [cdn-origem] INFO  ENVIADO  -> /127.0.0.1:47342 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=353c02cf487cf75c.S.1.GnGXjyfnR7j/IlN092Z...(115 chars)
+[22:08:33.668] [cdn-origem] INFO  RECEBIDO <- /127.0.0.1:47342 [HMAC OK] GET /arquivo20.ext
+[22:08:33.792] [cdn-origem] INFO  ORIGEM entregou /arquivo20.ext lido do disco (1024 bytes)
+[22:08:33.817] [cdn-origem] INFO  ENVIADO  -> /127.0.0.1:47342 [AES-CBC+HMAC] 200 OK\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo mestre do ar...(1045 chars) | pacote=353c02cf487cf75c.S.2.UZWX+qYvrQaPTXde6oV...(1499 chars)
+[22:08:34.502] [cdn-origem] INFO  Handshake: chaves da sessão ff80f10e937e5d1e decifradas com a chave privada RSA (cliente /127.0.0.1:47350)
+[22:08:34.502] [cdn-origem] INFO  ENVIADO  -> /127.0.0.1:47350 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=ff80f10e937e5d1e.S.1.RaBd9ZEOB7g67yy6DHO...(115 chars)
+[22:08:34.517] [cdn-origem] INFO  RECEBIDO <- /127.0.0.1:47350 [HMAC OK] GET /arquivo20.ext
+[22:08:34.637] [cdn-origem] INFO  ORIGEM entregou /arquivo20.ext lido do disco (1024 bytes)
+[22:08:34.652] [cdn-origem] INFO  ENVIADO  -> /127.0.0.1:47350 [AES-CBC+HMAC] 200 OK\nLength: 1024\n\n[v1] Conteudo mestre do arquivo20.ext | [v1] Conteudo mestre do ar...(1045 chars) | pacote=ff80f10e937e5d1e.S.2.s5abE1J0BhDprMWW9S1...(1499 chars)
+
+----- logs/cdn-router.log -----
+===== nova execução: 2026-10-18T22:08:31.396359859 =====
+[22:08:31.550] [cdn-router] INFO  Servidor UDP pronto na porta 5354 (RSA-2048 gerado; aguardando handshakes)
+[22:08:32.962] [cdn-router] INFO  HELLO de /127.0.0.1:45119 -> chave pública RSA enviada
+[22:08:33.171] [cdn-router] INFO  Handshake: sessão 5757d5d7809c0070 criada para /127.0.0.1:45119 (chaves AES+HMAC decifradas com a chave privada RSA)
+[22:08:33.235] [cdn-router] INFO  ENVIADO  -> /127.0.0.1:45119 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=5757d5d7809c0070.S.1.NmS9KqtR+d5bVYEOkxr...(115 chars)
+[22:08:33.295] [cdn-router] INFO  RECEBIDO <- /127.0.0.1:45119 [HMAC OK, sessão 5757d5d7809c0070] ONDE|arquivo20.ext|BR-NE
+[22:08:33.302] [cdn-router] INFO  GeoDNS: cliente em BR-NE pediu arquivo20.ext -> Edge mais próximo: 127.0.0.1:8001
+[22:08:33.303] [cdn-router] INFO  ENVIADO  -> /127.0.0.1:45119 [AES-CBC+HMAC] EDGE|127.0.0.1|8001|edge-8001 | pacote=5757d5d7809c0070.S.2.qkkIulBie+vi02QLgW1...(135 chars)
+[22:08:34.118] [cdn-router] INFO  HELLO de /127.0.0.1:51076 -> chave pública RSA enviada
+[22:08:34.248] [cdn-router] INFO  Handshake: sessão 69c37a1db417741c criada para /127.0.0.1:51076 (chaves AES+HMAC decifradas com a chave privada RSA)
+[22:08:34.250] [cdn-router] INFO  ENVIADO  -> /127.0.0.1:51076 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=69c37a1db417741c.S.1.qGqXyr0sDVc4z1xdqXx...(115 chars)
+[22:08:34.304] [cdn-router] INFO  RECEBIDO <- /127.0.0.1:51076 [HMAC OK, sessão 69c37a1db417741c] ONDE|arquivo20.ext|US
+[22:08:34.305] [cdn-router] INFO  GeoDNS: cliente em US pediu arquivo20.ext -> Edge mais próximo: 127.0.0.1:8003
+[22:08:34.306] [cdn-router] INFO  ENVIADO  -> /127.0.0.1:51076 [AES-CBC+HMAC] EDGE|127.0.0.1|8003|edge-8003 | pacote=69c37a1db417741c.S.2.VswPrDBM5uka9Nw6aJM...(135 chars)

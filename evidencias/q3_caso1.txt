@@ -1,0 +1,48 @@
+
+################ Q3 CASO 1 - busca válida com criptografia salto a salto ################
+
+################ CASO 1 - busca válida com criptografia salto a salto (P0, arquivo35.ext) ################
+   ---- P0 (origem) ----
+   [21:24:40.102] [p2p-P0] INFO  BUSCA iniciada em P0: arquivo35.ext
+   [21:24:40.120] [p2p-P0] INFO  P0 NÃO é responsável por arquivo35.ext (minha faixa: 1-10) -> repassando ao sucessor P1 (salto 1)
+   [21:24:40.132] [p2p-P0] INFO  Estabelecendo canal seguro P0 -> P1 (handshake RSA, chaves AES+HMAC)
+   [21:24:40.354] [p2p-P0] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:9101
+   [21:24:40.388] [p2p-P0] INFO  ENVIADO  -> /127.0.0.1:9101 [AES-CBC+HMAC] BUSCA|0|arquivo35.ext|1 | pacote=fd0ee5592654959f.C.1.pa7/ajwviSdSfYZvBkI...(135 chars)
+   [21:24:40.862] [p2p-P0] INFO  ENVIADO  -> /127.0.0.1:48626 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=0912a7b51920f2ac.S.1.D3nx0uk6yGCH7YT3yN/...(115 chars)
+   [21:24:40.864] [p2p-P0] INFO  RECEBIDO <- /127.0.0.1:48626 [HMAC OK] RESP|3|arquivo35.ext|conteudo-simulado-de-arquivo35.ext@P3|3
+   [21:24:40.873] [p2p-P0] INFO  >>> RESPOSTA recebida de P3 para arquivo35.ext: conteudo-simulado-de-arquivo35.ext@P3
+   [21:24:40.882] [p2p-P0] INFO  RESULTADO da busca de arquivo35.ext -> P3: conteudo-simulado-de-arquivo35.ext@P3 [3 salto(s)]
+   ---- P1 ----
+   [21:24:40.344] [p2p-P1] INFO  ENVIADO  -> /127.0.0.1:59034 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=fd0ee5592654959f.S.1.Beorf5DwI0GIMOxxVgg...(115 chars)
+   [21:24:40.380] [p2p-P1] INFO  RECEBIDO <- /127.0.0.1:59034 [HMAC OK] BUSCA|0|arquivo35.ext|1
+   [21:24:40.410] [p2p-P1] INFO  P1 NÃO é responsável por arquivo35.ext (minha faixa: 11-20) -> repassando ao sucessor P2 (salto 2)
+   [21:24:40.421] [p2p-P1] INFO  Estabelecendo canal seguro P1 -> P2 (handshake RSA, chaves AES+HMAC)
+   [21:24:40.567] [p2p-P1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:9102
+   [21:24:40.574] [p2p-P1] INFO  ENVIADO  -> /127.0.0.1:9102 [AES-CBC+HMAC] BUSCA|0|arquivo35.ext|2 | pacote=3f74c6a9c6bc48ec.C.1.CL0gDsKM+LEC21N51nq...(135 chars)
+   ---- P2 ----
+   [21:24:40.583] [p2p-P2] INFO  ENVIADO  -> /127.0.0.1:40710 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=3f74c6a9c6bc48ec.S.1.0pKfwaug1dSWJKTGlAy...(115 chars)
+   [21:24:40.588] [p2p-P2] INFO  RECEBIDO <- /127.0.0.1:40710 [HMAC OK] BUSCA|0|arquivo35.ext|2
+   [21:24:40.607] [p2p-P2] INFO  P2 NÃO é responsável por arquivo35.ext (minha faixa: 21-30) -> repassando ao sucessor P3 (salto 3)
+   [21:24:40.617] [p2p-P2] INFO  Estabelecendo canal seguro P2 -> P3 (handshake RSA, chaves AES+HMAC)
+   [21:24:40.755] [p2p-P2] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:9103
+   [21:24:40.760] [p2p-P2] INFO  ENVIADO  -> /127.0.0.1:9103 [AES-CBC+HMAC] BUSCA|0|arquivo35.ext|3 | pacote=1993373046747360.C.1.dismi/QbAwNHmeD/gq7...(135 chars)
+   ---- P3 (responsável) ----
+   [21:24:40.777] [p2p-P3] INFO  ENVIADO  -> /127.0.0.1:36776 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=1993373046747360.S.1.33bd3gf+gtqx4hT4hKm...(115 chars)
+   [21:24:40.783] [p2p-P3] INFO  RECEBIDO <- /127.0.0.1:36776 [HMAC OK] BUSCA|0|arquivo35.ext|3
+   [21:24:40.799] [p2p-P3] INFO  P3 é o RESPONSÁVEL por arquivo35.ext (faixa 31-40) após 3 salto(s). Respondendo à origem P0
+   [21:24:40.809] [p2p-P3] INFO  Estabelecendo canal seguro P3 -> P0 (handshake RSA, chaves AES+HMAC)
+   [21:24:40.858] [p2p-P3] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:9100
+   [21:24:40.866] [p2p-P3] INFO  ENVIADO  -> /127.0.0.1:9100 [AES-CBC+HMAC] RESP|3|arquivo35.ext|conteudo-simulado-de-arquivo35.ext@P3|3 | pacote=0912a7b51920f2ac.C.1.OL1gjBTmkIz+HUnWKUG...(179 chars)
+
+C1-01  P0 recebe a resposta de P3 após 3 saltos                           esperado=-> P3: conteudo-sim... obtido=-> P3: conteudo-sim... OK
+C1-02  enlace P0-P1: canal seguro (RSA -> AES+HMAC) aberto por P0         esperado=true                   obtido=true                   OK
+C1-03  P1 decifra e valida o HMAC do que P0 enviou                        esperado=true                   obtido=true                   OK
+C1-04  P1 não é responsável e repassa a P2 em NOVO canal seguro           esperado=true                   obtido=true                   OK
+C1-05  P2 decifra, valida o HMAC e repassa a P3                           esperado=true                   obtido=true                   OK
+C1-06  P3 valida o HMAC e se reconhece responsável (faixa 31-40)          esperado=true                   obtido=true                   OK
+C1-07  P3 responde à origem P0 por canal seguro cifrado                   esperado=true                   obtido=true                   OK
+C1-08  P0 valida o HMAC da resposta                                       esperado=true                   obtido=true                   OK
+C1-09  P4 e P5 não participaram (nenhuma linha nova)                      esperado=true                   obtido=true                   OK
+C1-10  log registra tráfego cifrado (pacote=sid.dir.seq...) em P1         esperado=true                   obtido=true                   OK
+
+=== RESULTADO: 10/10 verificações passaram ===

@@ -1,0 +1,127 @@
+
+################ Q4 - TESTE COMPLETO: informações válidas e inválidas ################
+Subindo Origem, 3 Edges e Router como processos independentes (TTL=6 s, latência simulada desligada)...
+
+################ A) ORIGEM: 1000 arquivos mestre em disco ################
+A01    dados_origem/ tem arquivo1.ext ... arquivo1000.ext, todos com 1024 bytes       esperado=1000                 obtido=1000                 OK
+A02    não existe arquivo1001.ext                                                     esperado=false                obtido=false                OK
+
+################ B) ROUTER/GeoDNS (UDP cifrado): localização -> Edge ################
+B01    ONDE|arquivo20.ext|BR-NE                                                       esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B02    ONDE|arquivo20.ext|BR-SE                                                       esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B03    ONDE|arquivo20.ext|US                                                          esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B04    ONDE|arquivo20.ext|br-se                                                       esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B05    ONDE|arquivo20.ext|us                                                          esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B06    ONDE|arquivo20.ext|JP (desconhecida: Edge padrão)                              esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B07    ONDE|arquivo20.ext|xx-yy (desconhecida: Edge padrão)                           esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B10    'ONDE|arquivoXYZ.ext|BR-NE'                                                    esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B11    'ONDE|arquivo0.ext|BR-NE'                                                      esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B12    'ONDE|arquivo1001.ext|BR-NE'                                                   esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B13    'ONDE|arquivo20.ext|'                                                          esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B14    'ONDE|arquivo20.ext|BR-NE; DROP'                                               esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B15    'ONDE|arquivo20.ext|%%%'                                                       esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B16    'ONDE|arquivo20.ext'                                                           esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B17    'ONDE|arquivo20.ext|BR-NE|extra'                                               esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B18    'PING'                                                                         esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B19    ''                                                                             esperado=ERRO|Erro na entr... obtido=ERRO|Erro na entr... OK
+B20    pacote com HMAC corrompido                                                     esperado=<sem resposta>       obtido=<sem resposta>       OK
+B21    pacote com texto cifrado adulterado                                            esperado=<sem resposta>       obtido=<sem resposta>       OK
+B22    SHA-256 sem chave no lugar do HMAC                                             esperado=<sem resposta>       obtido=<sem resposta>       OK
+B23    replay: 1º pacote é respondido                                                 esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+B24    replay: 2º pacote idêntico é descartado                                        esperado=<sem resposta>       obtido=<sem resposta>       OK
+B25    sessão inexistente (sid falso)                                                 esperado=<sem resposta>       obtido=<sem resposta>       OK
+B26    datagrama lixo                                                                 esperado=<sem resposta>       obtido=<sem resposta>       OK
+B27    handshake com cifra RSA corrompida                                             esperado=<sem resposta>       obtido=<sem resposta>       OK
+B28    Router segue funcionando após os ataques                                       esperado=EDGE|127.0.0.1|80... obtido=EDGE|127.0.0.1|80... OK
+
+################ C) CASO 1 - HIT x MISS nos 3 Edges: formato do protocolo, conteúdo e HMAC validado nas duas pontas ################
+C01a   Edge 8001: 1ª GET /arquivo20.ext -> 200 OK, Cache: MISS, Length: 1024          esperado=true                 obtido=true                 OK
+C01b   Edge 8001: 2ª GET /arquivo20.ext -> 200 OK, Cache: HIT, Length: 1024           esperado=true                 obtido=true                 OK
+C01c   Edge 8001: log registra MISS e HIT, com HMAC validado nas duas pontas          esperado=true                 obtido=true                 OK
+C02a   Edge 8002: 1ª GET /arquivo20.ext -> 200 OK, Cache: MISS, Length: 1024          esperado=true                 obtido=true                 OK
+C02b   Edge 8002: 2ª GET /arquivo20.ext -> 200 OK, Cache: HIT, Length: 1024           esperado=true                 obtido=true                 OK
+C02c   Edge 8002: log registra MISS e HIT, com HMAC validado nas duas pontas          esperado=true                 obtido=true                 OK
+C03a   Edge 8003: 1ª GET /arquivo20.ext -> 200 OK, Cache: MISS, Length: 1024          esperado=true                 obtido=true                 OK
+C03b   Edge 8003: 2ª GET /arquivo20.ext -> 200 OK, Cache: HIT, Length: 1024           esperado=true                 obtido=true                 OK
+C03c   Edge 8003: log registra MISS e HIT, com HMAC validado nas duas pontas          esperado=true                 obtido=true                 OK
+C04    amostra de 30 arquivos (1, 2, 500, 999, 1000 e sorteados): conteúdo certo p... esperado=30                   obtido=30                   OK
+       mediana MISS = 30.8 ms | mediana HIT = 6.9 ms (latência simulada da Origem desligada)
+C05    a resposta HIT é mais rápida que a MISS na prática (mediana de 7 arquivos)     esperado=true                 obtido=true                 OK
+
+################ D) CASO 2 - expiração por TTL (6 s) ################
+D01    GET /arquivo30.ext: MISS                                                       esperado=true                 obtido=true                 OK
+D02    GET /arquivo30.ext: HIT (dentro do TTL)                                        esperado=true                 obtido=true                 OK
+       aguardando 7 s para o TTL expirar...
+D03    log do Edge registra 'TTL EXPIROU' para /arquivo30.ext                         esperado=true                 obtido=true                 OK
+D04    GET /arquivo30.ext após o TTL: MISS (nova busca segura na Origem)              esperado=true                 obtido=true                 OK
+
+################ E) CASO 2 - invalidação ativa (INVALIDATE cifrado da Origem para os 3 Edges) e consistência ################
+E01a   Edge 8001: log confirma INVALIDATE (HMAC validado) e arquivo31 removido do ... esperado=true                 obtido=true                 OK
+E01b   Edge 8001: próxima GET /arquivo31.ext força MISS (mesma versão v1)             esperado=true                 obtido=true                 OK
+E01c   Edge 8001: /arquivo32.ext, que não foi invalidado, segue em HIT (seletivo)     esperado=true                 obtido=true                 OK
+E02a   Edge 8002: log confirma INVALIDATE (HMAC validado) e arquivo31 removido do ... esperado=true                 obtido=true                 OK
+E02b   Edge 8002: próxima GET /arquivo31.ext força MISS (mesma versão v1)             esperado=true                 obtido=true                 OK
+E02c   Edge 8002: /arquivo32.ext, que não foi invalidado, segue em HIT (seletivo)     esperado=true                 obtido=true                 OK
+E03a   Edge 8003: log confirma INVALIDATE (HMAC validado) e arquivo31 removido do ... esperado=true                 obtido=true                 OK
+E03b   Edge 8003: próxima GET /arquivo31.ext força MISS (mesma versão v1)             esperado=true                 obtido=true                 OK
+E03c   Edge 8003: /arquivo32.ext, que não foi invalidado, segue em HIT (seletivo)     esperado=true                 obtido=true                 OK
+E11    Edge 8001: após atualizar+invalidar, GET /arquivo32.ext é MISS e traz a ver... esperado=true                 obtido=true                 OK
+E12    Edge 8002: após atualizar+invalidar, GET /arquivo32.ext é MISS e traz a ver... esperado=true                 obtido=true                 OK
+E13    Edge 8003: após atualizar+invalidar, GET /arquivo32.ext é MISS e traz a ver... esperado=true                 obtido=true                 OK
+E14    a requisição seguinte vira HIT já com a versão v2 (cache renovado com segur... esperado=true                 obtido=true                 OK
+
+################ F) INVALIDATE só vale se vier da Origem ################
+F01    cliente comum envia INVALIDATE -> 403 Forbidden                                esperado=403 Forbidden        obtido=403 Forbidden        OK
+F02    credencial de Origem errada -> 403 Forbidden                                   esperado=403 Forbidden        obtido=403 Forbidden        OK
+F03    log registra 'INVALIDATE NEGADO' duas vezes                                    esperado=2                    obtido=2                    OK
+F04    cache intacto: GET /arquivo20.ext segue HIT                                    esperado=true                 obtido=true                 OK
+F05    Origem autêntica, mas com nome inválido -> 400 Bad Request                     esperado=400 Bad Request      obtido=400 Bad Request      OK
+F06    Origem autêntica, nome válido -> 200 OK                                        esperado=200 OK               obtido=200 OK               OK
+F07    e a próxima GET /arquivo20.ext volta a ser MISS                                esperado=true                 obtido=true                 OK
+
+################ G) CASO 3 - requisições inválidas/inexistentes: a Origem NÃO é consultada ################
+G01    'GET /arquivoXYZ.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'    esperado=true                 obtido=true                 OK
+G02    'GET /arquivo0.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'      esperado=true                 obtido=true                 OK
+G03    'GET /arquivo1001.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'   esperado=true                 obtido=true                 OK
+G04    'GET /arquivo01.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'     esperado=true                 obtido=true                 OK
+G05    'GET /arquivo-1.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'     esperado=true                 obtido=true                 OK
+G06    'GET /ARQUIVO5.EXT' -> 400 + 'Erro na entrada de dados. Tente outra vez!'      esperado=true                 obtido=true                 OK
+G07    'GET arquivo5.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'       esperado=true                 obtido=true                 OK
+G08    'GET /arquivo5' -> 400 + 'Erro na entrada de dados. Tente outra vez!'          esperado=true                 obtido=true                 OK
+G09    'GET /arquivo5.ext extra' -> 400 + 'Erro na entrada de dados. Tente outra v... esperado=true                 obtido=true                 OK
+G10    'GET ' -> 400 + 'Erro na entrada de dados. Tente outra vez!'                   esperado=true                 obtido=true                 OK
+G11    'GET' -> 400 + 'Erro na entrada de dados. Tente outra vez!'                    esperado=true                 obtido=true                 OK
+G12    'POST /arquivo5.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'     esperado=true                 obtido=true                 OK
+G13    'get /arquivo5.ext' -> 400 + 'Erro na entrada de dados. Tente outra vez!'      esperado=true                 obtido=true                 OK
+G14    'FOO' -> 400 + 'Erro na entrada de dados. Tente outra vez!'                    esperado=true                 obtido=true                 OK
+G15    '' -> 400 + 'Erro na entrada de dados. Tente outra vez!'                       esperado=true                 obtido=true                 OK
+G16    a Origem não registrou nenhuma linha durante os pedidos inválidos              esperado=0                    obtido=0                    OK
+G17    o Edge registrou o erro de entrada para cada pedido                            esperado=15                   obtido=15                   OK
+G18    nome válido mas inexistente na Origem -> 404 Not Found                         esperado=404 Not Found        obtido=404 Not Found        OK
+G19    o 404 não é guardado em cache (a Origem foi consultada nas 2 vezes)            esperado=2                    obtido=2                    OK
+G20    a segunda resposta também é 404                                                esperado=404 Not Found        obtido=404 Not Found        OK
+G21    arquivo restaurado na Origem volta a ser servido                               esperado=true                 obtido=true                 OK
+
+################ H) CASO 3 - erro de cifra na borda: o Edge ENCERRA a conexão, alerta no log e o cache fica intacto ################
+H01    handshake com cifra RSA corrompida (erro de decifragem) -> recusado            esperado=<handshake recusado> obtido=<handshake recusado> OK
+H02    lixo no lugar do handshake -> conexão encerrada                                esperado=<conexão encerrada>  obtido=<conexão encerrada>  OK
+H03    GET com HMAC corrompido -> o Edge encerra a conexão                            esperado=<conexão encerrada>  obtido=<conexão encerrada>  OK
+H04    GET com texto cifrado adulterado -> o Edge encerra a conexão                   esperado=<conexão encerrada>  obtido=<conexão encerrada>  OK
+H05    GET com hash SHA-256 sem chave -> o Edge encerra a conexão                     esperado=<conexão encerrada>  obtido=<conexão encerrada>  OK
+H06    replay: 1º pacote é respondido (HIT)                                           esperado=true                 obtido=true                 OK
+H07    replay: 2º pacote idêntico -> conexão encerrada                                esperado=<conexão encerrada>  obtido=<conexão encerrada>  OK
+H08    log do Edge registra os alertas (handshake e HMAC)                             esperado=true                 obtido=true                 OK
+H09    a Origem não recebeu nenhuma requisição durante os ataques                     esperado=0                    obtido=0                    OK
+H10    cache intacto: /arquivo20.ext e /arquivo21.ext seguem em HIT                   esperado=true                 obtido=true                 OK
+
+################ I) GERADOR DE TRÁFEGO concorrente: 8 clientes x 12 requisições nos 3 Edges ################
+I01    96 requisições concorrentes: todas com conteúdo correto, sem erro              esperado=96/0                 obtido=96/0                 OK
+
+################ J) RESILIÊNCIA: com a Origem FORA DO AR, a borda continua servindo o que está em cache ################
+J01    Origem derrubada: GET /arquivo60.ext (em cache) continua HIT                   esperado=true                 obtido=true                 OK
+J02    GET de arquivo fora do cache -> 502 Bad Gateway (erro tratado, sem travar)     esperado=502 Bad Gateway      obtido=502 Bad Gateway      OK
+J03    o Edge segue vivo e servindo o cache                                           esperado=true                 obtido=true                 OK
+
+=== RESULTADO: 98/98 verificações passaram ===
+
+Código de saída do teste: 0 (0 = tudo passou)

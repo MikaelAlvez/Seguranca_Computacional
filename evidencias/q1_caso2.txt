@@ -1,0 +1,92 @@
+
+################ Q1 CASO 2 - binding dinâmico e notificação ################
+>>> Registrador atualiza servidor1 -> 192.168.0.111
+[02:07:26.566] [dns-registrador] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=13141aa6a38465ac)
+[02:07:26.605] [dns-registrador] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:26.660] [dns-registrador] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE servidor1 192.168.0.111 | pacote=13141aa6a38465ac.C.1.uzf+e8DFrmmZ1zCtW6C...(135 chars)
+[02:07:26.669] [dns-registrador] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] OK UPDATED servidor1 192.168.0.111
+[02:07:26.669] [dns-registrador] INFO  ATUALIZAÇÃO CONFIRMADA pelo DNS: servidor1 -> 192.168.0.111
+
+===== saída do cliente C1 =====
+[02:07:22.973] [dns-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=9adc1e3d83a74f1f)
+[02:07:23.198] [dns-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:23.329] [dns-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] OK ASSINADO
+[02:07:23.348] [dns-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] SUBSCRIBE | pacote=9adc1e3d83a74f1f.C.1.b5nipYrxU+p5e2uJCCi...(115 chars)
+[02:07:23.349] [dns-cliente-C1] INFO  Assinatura confirmada: OK ASSINADO
+[02:07:23.369] [dns-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] QUERY servidor1 | pacote=9adc1e3d83a74f1f.C.2.sclWWuK/MgXRKC7i0YW...(115 chars)
+[02:07:23.370] [dns-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ANSWER servidor1 192.168.0.10
+[02:07:23.375] [dns-cliente-C1] INFO  RESOLUÇÃO VALIDADA: servidor1 -> 192.168.0.10
+[02:07:23.377] [dns-cliente-C1] INFO  Aguardando notificações por 8 s...
+[02:07:26.676] [dns-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] NOTIFY servidor1 192.168.0.111
+[02:07:26.676] [dns-cliente-C1] INFO  >>> ATUALIZAÇÃO RECEBIDA E VALIDADA: servidor1 agora é 192.168.0.111 (tabela local atualizada)
+[02:07:31.377] [dns-cliente-C1] INFO  Tabela local: {servidor1=192.168.0.111}
+
+===== saída do cliente C2 =====
+[02:07:22.979] [dns-cliente-C2] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=3abe4190c71d39eb)
+[02:07:23.194] [dns-cliente-C2] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:23.347] [dns-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] OK ASSINADO
+[02:07:23.361] [dns-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] SUBSCRIBE | pacote=3abe4190c71d39eb.C.1.hVBfp7/RRpeVEGhQxib...(115 chars)
+[02:07:23.362] [dns-cliente-C2] INFO  Assinatura confirmada: OK ASSINADO
+[02:07:23.377] [dns-cliente-C2] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] QUERY servidor1 | pacote=3abe4190c71d39eb.C.2.+8SExLk26gitjtG9V3J...(115 chars)
+[02:07:23.385] [dns-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ANSWER servidor1 192.168.0.10
+[02:07:23.388] [dns-cliente-C2] INFO  RESOLUÇÃO VALIDADA: servidor1 -> 192.168.0.10
+[02:07:23.389] [dns-cliente-C2] INFO  Aguardando notificações por 8 s...
+[02:07:26.672] [dns-cliente-C2] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] NOTIFY servidor1 192.168.0.111
+[02:07:26.672] [dns-cliente-C2] INFO  >>> ATUALIZAÇÃO RECEBIDA E VALIDADA: servidor1 agora é 192.168.0.111 (tabela local atualizada)
+[02:07:31.390] [dns-cliente-C2] INFO  Tabela local: {servidor1=192.168.0.111}
+
+===== saída do cliente C3 =====
+[02:07:22.989] [dns-cliente-C3] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=70a503f7dbe0f565)
+[02:07:23.189] [dns-cliente-C3] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:23.325] [dns-cliente-C3] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] SUBSCRIBE | pacote=70a503f7dbe0f565.C.1.o3t1eRC/hqQVpAXyMrg...(115 chars)
+[02:07:23.360] [dns-cliente-C3] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] OK ASSINADO
+[02:07:23.366] [dns-cliente-C3] INFO  Assinatura confirmada: OK ASSINADO
+[02:07:23.374] [dns-cliente-C3] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ANSWER servidor1 192.168.0.10
+[02:07:23.375] [dns-cliente-C3] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] QUERY servidor1 | pacote=70a503f7dbe0f565.C.2.phtZ76j1Df5obkvlX7V...(115 chars)
+[02:07:23.392] [dns-cliente-C3] INFO  RESOLUÇÃO VALIDADA: servidor1 -> 192.168.0.10
+[02:07:23.393] [dns-cliente-C3] INFO  Aguardando notificações por 8 s...
+[02:07:26.667] [dns-cliente-C3] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] NOTIFY servidor1 192.168.0.111
+[02:07:26.679] [dns-cliente-C3] INFO  >>> ATUALIZAÇÃO RECEBIDA E VALIDADA: servidor1 agora é 192.168.0.111 (tabela local atualizada)
+[02:07:31.394] [dns-cliente-C3] INFO  Tabela local: {servidor1=192.168.0.111}
+
+----- logs/dns-servidor.log -----
+===== nova execução: 2026-10-18T02:07:20.782341445 =====
+[02:07:20.826] [dns-servidor] INFO  Mapa inicial carregado com 10 nomes (servidor1 -> 192.168.0.10 ... servidor10 -> 192.168.0.100)
+[02:07:20.839] [dns-servidor] INFO  Servidor UDP pronto na porta 5300 (RSA-2048 gerado; aguardando handshakes)
+[02:07:22.711] [dns-servidor] INFO  HELLO de /127.0.0.1:51598 -> chave pública RSA enviada
+[02:07:22.715] [dns-servidor] INFO  HELLO de /127.0.0.1:41208 -> chave pública RSA enviada
+[02:07:22.723] [dns-servidor] INFO  HELLO de /127.0.0.1:47444 -> chave pública RSA enviada
+[02:07:23.099] [dns-servidor] INFO  Handshake: sessão 3abe4190c71d39eb criada para /127.0.0.1:51598 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:23.105] [dns-servidor] INFO  Handshake: sessão 70a503f7dbe0f565 criada para /127.0.0.1:47444 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:23.116] [dns-servidor] INFO  Handshake: sessão 9adc1e3d83a74f1f criada para /127.0.0.1:41208 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:23.156] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:41208 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=9adc1e3d83a74f1f.S.1.QdN/bnnCJDkAsfoelMW...(115 chars)
+[02:07:23.168] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:51598 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=3abe4190c71d39eb.S.1.kM+QalpiIkyDYSUVxBI...(115 chars)
+[02:07:23.178] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47444 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=70a503f7dbe0f565.S.1.POtow7C7ia/f4sapcSE...(115 chars)
+[02:07:23.283] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:47444 [HMAC OK, sessão 70a503f7dbe0f565] SUBSCRIBE
+[02:07:23.307] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:41208 [HMAC OK, sessão 9adc1e3d83a74f1f] SUBSCRIBE
+[02:07:23.328] [dns-servidor] INFO  Sessão 9adc1e3d83a74f1f assinou notificações (assinantes: 2)
+[02:07:23.307] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:51598 [HMAC OK, sessão 3abe4190c71d39eb] SUBSCRIBE
+[02:07:23.330] [dns-servidor] INFO  Sessão 3abe4190c71d39eb assinou notificações (assinantes: 3)
+[02:07:23.328] [dns-servidor] INFO  Sessão 70a503f7dbe0f565 assinou notificações (assinantes: 1)
+[02:07:23.336] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:41208 [AES-CBC+HMAC] OK ASSINADO | pacote=9adc1e3d83a74f1f.S.2.5OJ5QhpSfF5nnED8P/V...(115 chars)
+[02:07:23.345] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:51598 [AES-CBC+HMAC] OK ASSINADO | pacote=3abe4190c71d39eb.S.2.sMQyVRDbuMQJXJIeNx8...(115 chars)
+[02:07:23.350] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:41208 [HMAC OK, sessão 9adc1e3d83a74f1f] QUERY servidor1
+[02:07:23.351] [dns-servidor] INFO  Resolução: servidor1 -> 192.168.0.10
+[02:07:23.358] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47444 [AES-CBC+HMAC] OK ASSINADO | pacote=70a503f7dbe0f565.S.2.qtI/zrhqnhS7V5xjsDS...(115 chars)
+[02:07:23.367] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:41208 [AES-CBC+HMAC] ANSWER servidor1 192.168.0.10 | pacote=9adc1e3d83a74f1f.S.3.AwHb61nN7/273I/qEAT...(135 chars)
+[02:07:23.367] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:47444 [HMAC OK, sessão 70a503f7dbe0f565] QUERY servidor1
+[02:07:23.370] [dns-servidor] INFO  Resolução: servidor1 -> 192.168.0.10
+[02:07:23.368] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:51598 [HMAC OK, sessão 3abe4190c71d39eb] QUERY servidor1
+[02:07:23.371] [dns-servidor] INFO  Resolução: servidor1 -> 192.168.0.10
+[02:07:23.380] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47444 [AES-CBC+HMAC] ANSWER servidor1 192.168.0.10 | pacote=70a503f7dbe0f565.S.3.jknj6uqyr2/Nj+E4KDf...(135 chars)
+[02:07:23.384] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:51598 [AES-CBC+HMAC] ANSWER servidor1 192.168.0.10 | pacote=3abe4190c71d39eb.S.3.8OIstmw1SUNA5tRnd+V...(135 chars)
+[02:07:26.457] [dns-servidor] INFO  HELLO de /127.0.0.1:52390 -> chave pública RSA enviada
+[02:07:26.587] [dns-servidor] INFO  Handshake: sessão 13141aa6a38465ac criada para /127.0.0.1:52390 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:26.595] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:52390 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=13141aa6a38465ac.S.1.Br2i4XlL0Ay42o3GyIh...(115 chars)
+[02:07:26.632] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:52390 [HMAC OK, sessão 13141aa6a38465ac] UPDATE servidor1 192.168.0.111
+[02:07:26.639] [dns-servidor] INFO  BINDING DINÂMICO: servidor1 192.168.0.10 -> 192.168.0.111 (HMAC do registrador validado)
+[02:07:26.640] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:52390 [AES-CBC+HMAC] OK UPDATED servidor1 192.168.0.111 | pacote=13141aa6a38465ac.S.2.O0FogJVSFXG+VzsLjI9...(155 chars)
+[02:07:26.655] [dns-servidor] INFO  Notificando 3 assinante(s): servidor1 -> 192.168.0.111
+[02:07:26.664] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47444 [AES-CBC+HMAC] NOTIFY servidor1 192.168.0.111 | pacote=70a503f7dbe0f565.S.4.guxC617/K/jaQAXLPyd...(135 chars)
+[02:07:26.670] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:41208 [AES-CBC+HMAC] NOTIFY servidor1 192.168.0.111 | pacote=9adc1e3d83a74f1f.S.4.eHNlEos1eLB9d6bA1gn...(135 chars)
+[02:07:26.675] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:51598 [AES-CBC+HMAC] NOTIFY servidor1 192.168.0.111 | pacote=3abe4190c71d39eb.S.4.SgLU31cA9Hr2Z0kRqSZ...(135 chars)

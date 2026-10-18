@@ -1,0 +1,4 @@
+
+################ Q4 - gerador de tráfego e taxa de acerto do cache ################
+[22:09:16.286] [cdn-cliente-C1] INFO  ROUTER indicou o Edge edge-8001 (127.0.0.1:8001) para a região BR-NE
+[22:09:17.439] [cdn-cliente-C1] INFO  RESUMO DA CARGA: 30 requisições | HIT=20 (média 8.8 ms) | MISS=10 (média 70.1 ms) | taxa de acerto do cache = 67%

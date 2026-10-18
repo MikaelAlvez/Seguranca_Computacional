@@ -1,0 +1,122 @@
+
+################ Q1 - ClienteRegistrador: sucesso e erros ################
+>>> R1) IP inválido (999.1.1.1) -> o DNS recusa e o mapa não muda
+[02:07:58.462] [dns-registrador] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=58f39328e3cff6f6)
+[02:07:58.609] [dns-registrador] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:58.670] [dns-registrador] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE servidor1 999.1.1.1 | pacote=58f39328e3cff6f6.C.1.nxLgFDthgjKnVVFAR5w...(135 chars)
+[02:07:58.671] [dns-registrador] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ERRO Erro na entrada de dados. Tente outra vez!
+[02:07:58.671] [dns-registrador] ERRO  ATUALIZAÇÃO REJEITADA pelo DNS: Erro na entrada de dados. Tente outra vez!
+
+>>> R2) nome inválido ('ser vidor!')
+[02:07:58.921] [dns-registrador] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=bba462b1139e92b2)
+[02:07:58.976] [dns-registrador] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:59.028] [dns-registrador] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE ser vidor! 192.168.0.5 | pacote=bba462b1139e92b2.C.1.l9QDCVO083MtHWQDka8...(135 chars)
+[02:07:59.032] [dns-registrador] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ERRO Erro na entrada de dados. Tente outra vez!
+[02:07:59.032] [dns-registrador] ERRO  ATUALIZAÇÃO REJEITADA pelo DNS: Erro na entrada de dados. Tente outra vez!
+
+>>> R3) registrador com credencial ERRADA -> NAO_AUTORIZADO
+[02:07:59.305] [dns-registrador] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=d72214e83d9ac417)
+[02:07:59.360] [dns-registrador] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:07:59.429] [dns-registrador] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE servidor1 192.168.0.7 | pacote=d72214e83d9ac417.C.1.ZPX+IVL+nWZWSxmX2xk...(135 chars)
+[02:07:59.430] [dns-registrador] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] ERRO NAO_AUTORIZADO
+[02:07:59.430] [dns-registrador] ERRO  ATUALIZAÇÃO NEGADA: este registrador não tem credencial válida no DNS
+
+>>> R4) número de argumentos errado (só o nome)
+Uso: java q1_dns.ClienteRegistrador [--token-errado] [<nome> <ip>]
+
+>>> conferência: após R1-R4 o servidor1 continua com o IP original
+[02:07:59.915] [dns-cliente-C1] INFO  RESOLUÇÃO VALIDADA: servidor1 -> 192.168.0.10
+
+>>> R5) atualização VÁLIDA: servidor1 -> 192.168.0.111, conferida por uma consulta
+[02:08:00.171] [dns-registrador] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=a4f0e6332bd6ae61)
+[02:08:00.220] [dns-registrador] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:08:00.290] [dns-registrador] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE servidor1 192.168.0.111 | pacote=a4f0e6332bd6ae61.C.1.Qs3b9EltiaX7OXVE+Yt...(135 chars)
+[02:08:00.291] [dns-registrador] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] OK UPDATED servidor1 192.168.0.111
+[02:08:00.296] [dns-registrador] INFO  ATUALIZAÇÃO CONFIRMADA pelo DNS: servidor1 -> 192.168.0.111
+[02:08:00.626] [dns-cliente-C1] INFO  RESOLUÇÃO VALIDADA: servidor1 -> 192.168.0.111
+
+>>> R6) nome novo (o binding dinâmico também cria nomes): servidor11 -> 192.168.0.110
+[02:08:00.841] [dns-registrador] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=a8380a6e57993752)
+[02:08:00.876] [dns-registrador] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+[02:08:00.933] [dns-registrador] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE servidor11 192.168.0.110 | pacote=a8380a6e57993752.C.1.jm3860EFhpEo96AjuCY...(135 chars)
+[02:08:00.934] [dns-registrador] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] OK UPDATED servidor11 192.168.0.110
+[02:08:00.934] [dns-registrador] INFO  ATUALIZAÇÃO CONFIRMADA pelo DNS: servidor11 -> 192.168.0.110
+[02:08:01.352] [dns-cliente-C1] INFO  RESOLUÇÃO VALIDADA: servidor11 -> 192.168.0.110
+
+>>> R7) modo interativo: uma linha válida, duas inválidas e 'sair'
+[02:08:01.582] [dns-registrador] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para /127.0.0.1:5300 (sid=fa8bf13f231f919d)
+[02:08:01.608] [dns-registrador] INFO  Handshake concluído: canal AES+HMAC estabelecido com /127.0.0.1:5300
+Digite '<nome> <ip>' (ou 'sair'):
+[02:08:01.681] [dns-registrador] INFO  ENVIADO  -> /127.0.0.1:5300 [AES-CBC+HMAC] UPDATE servidor2 192.168.0.222 | pacote=fa8bf13f231f919d.C.1.1yWCMiLjrcc0N1qvb/O...(135 chars)
+[02:08:01.683] [dns-registrador] INFO  RECEBIDO <- /127.0.0.1:5300 [HMAC OK] OK UPDATED servidor2 192.168.0.222
+[02:08:01.683] [dns-registrador] INFO  ATUALIZAÇÃO CONFIRMADA pelo DNS: servidor2 -> 192.168.0.222
+Erro na entrada de dados. Tente outra vez!
+Erro na entrada de dados. Tente outra vez!
+
+>>> R8) DNS fora do ar (aguarde ~6 s: 3 tentativas de handshake)
+[02:08:04.829] [dns-registrador] ERRO  Sem resposta do servidor (tentativa 1/3)
+[02:08:06.841] [dns-registrador] ERRO  Sem resposta do servidor (tentativa 2/3)
+[02:08:08.844] [dns-registrador] ERRO  Sem resposta do servidor (tentativa 3/3)
+Servidor DNS sem resposta: servidor sem resposta após 3 tentativas
+
+----- logs/dns-servidor.log -----
+===== nova execução: 2026-10-18T02:07:56.847460299 =====
+[02:07:56.885] [dns-servidor] INFO  Mapa inicial carregado com 10 nomes (servidor1 -> 192.168.0.10 ... servidor10 -> 192.168.0.100)
+[02:07:56.898] [dns-servidor] INFO  Servidor UDP pronto na porta 5300 (RSA-2048 gerado; aguardando handshakes)
+[02:07:58.351] [dns-servidor] INFO  HELLO de /127.0.0.1:60288 -> chave pública RSA enviada
+[02:07:58.545] [dns-servidor] INFO  Handshake: sessão 58f39328e3cff6f6 criada para /127.0.0.1:60288 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:58.608] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:60288 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=58f39328e3cff6f6.S.1.zxrecC7seplnfI5SaRA...(115 chars)
+[02:07:58.661] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:60288 [HMAC OK, sessão 58f39328e3cff6f6] UPDATE servidor1 999.1.1.1
+[02:07:58.663] [dns-servidor] ERRO  Erro na entrada de dados. Tente outra vez! (UPDATE com nome/IP inválido)
+[02:07:58.663] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:60288 [AES-CBC+HMAC] ERRO Erro na entrada de dados. Tente outra vez! | pacote=58f39328e3cff6f6.S.2.GyZVvY2ScvjY3eByCpY...(155 chars)
+[02:07:58.803] [dns-servidor] INFO  HELLO de /127.0.0.1:51672 -> chave pública RSA enviada
+[02:07:58.946] [dns-servidor] INFO  Handshake: sessão bba462b1139e92b2 criada para /127.0.0.1:51672 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:58.947] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:51672 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=bba462b1139e92b2.S.1.cAJ82iieQOT0vFnd0vE...(115 chars)
+[02:07:59.004] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:51672 [HMAC OK, sessão bba462b1139e92b2] UPDATE ser vidor! 192.168.0.5
+[02:07:59.005] [dns-servidor] ERRO  Erro na entrada de dados. Tente outra vez! (UPDATE com nome/IP inválido)
+[02:07:59.014] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:51672 [AES-CBC+HMAC] ERRO Erro na entrada de dados. Tente outra vez! | pacote=bba462b1139e92b2.S.2.X98O03MLWqWF74ym5EH...(155 chars)
+[02:07:59.179] [dns-servidor] INFO  HELLO de /127.0.0.1:43261 -> chave pública RSA enviada
+[02:07:59.337] [dns-servidor] INFO  Handshake: sessão d72214e83d9ac417 criada para /127.0.0.1:43261 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:59.340] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:43261 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=d72214e83d9ac417.S.1.Auqy5ouutmasQn8zwV8...(115 chars)
+[02:07:59.409] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:43261 [HMAC OK, sessão d72214e83d9ac417] UPDATE servidor1 192.168.0.7
+[02:07:59.409] [dns-servidor] SEGUR UPDATE NEGADO: sessão d72214e83d9ac417 não possui credencial de registrador
+[02:07:59.410] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:43261 [AES-CBC+HMAC] ERRO NAO_AUTORIZADO | pacote=d72214e83d9ac417.S.2.8WWFqvN/qmT9DzUn+Ea...(135 chars)
+[02:07:59.676] [dns-servidor] INFO  HELLO de /127.0.0.1:47592 -> chave pública RSA enviada
+[02:07:59.831] [dns-servidor] INFO  Handshake: sessão ec04bfd87c9d38e0 criada para /127.0.0.1:47592 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:07:59.838] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47592 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=ec04bfd87c9d38e0.S.1.qTymPdgWZTzgIjCeWkE...(115 chars)
+[02:07:59.885] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:47592 [HMAC OK, sessão ec04bfd87c9d38e0] QUERY servidor1
+[02:07:59.886] [dns-servidor] INFO  Resolução: servidor1 -> 192.168.0.10
+[02:07:59.900] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47592 [AES-CBC+HMAC] ANSWER servidor1 192.168.0.10 | pacote=ec04bfd87c9d38e0.S.2.cMhhSrrRekHmE4b3//S...(135 chars)
+[02:08:00.059] [dns-servidor] INFO  HELLO de /127.0.0.1:44572 -> chave pública RSA enviada
+[02:08:00.191] [dns-servidor] INFO  Handshake: sessão a4f0e6332bd6ae61 criada para /127.0.0.1:44572 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:08:00.199] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:44572 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=a4f0e6332bd6ae61.S.1.xIKz/ZUWLqg759VXLTD...(115 chars)
+[02:08:00.252] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:44572 [HMAC OK, sessão a4f0e6332bd6ae61] UPDATE servidor1 192.168.0.111
+[02:08:00.253] [dns-servidor] INFO  BINDING DINÂMICO: servidor1 192.168.0.10 -> 192.168.0.111 (HMAC do registrador validado)
+[02:08:00.254] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:44572 [AES-CBC+HMAC] OK UPDATED servidor1 192.168.0.111 | pacote=a4f0e6332bd6ae61.S.2.xBWEFiR43z5trPZetJ2...(155 chars)
+[02:08:00.279] [dns-servidor] INFO  Notificando 0 assinante(s): servidor1 -> 192.168.0.111
+[02:08:00.431] [dns-servidor] INFO  HELLO de /127.0.0.1:47709 -> chave pública RSA enviada
+[02:08:00.550] [dns-servidor] INFO  Handshake: sessão 6294575d62c1c110 criada para /127.0.0.1:47709 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:08:00.561] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47709 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=6294575d62c1c110.S.1.arN5dt5rlo9f1xrXzrp...(115 chars)
+[02:08:00.604] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:47709 [HMAC OK, sessão 6294575d62c1c110] QUERY servidor1
+[02:08:00.605] [dns-servidor] INFO  Resolução: servidor1 -> 192.168.0.111
+[02:08:00.609] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:47709 [AES-CBC+HMAC] ANSWER servidor1 192.168.0.111 | pacote=6294575d62c1c110.S.2.FYcMntSw3NHmffeHw4D...(135 chars)
+[02:08:00.745] [dns-servidor] INFO  HELLO de /127.0.0.1:49806 -> chave pública RSA enviada
+[02:08:00.858] [dns-servidor] INFO  Handshake: sessão a8380a6e57993752 criada para /127.0.0.1:49806 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:08:00.858] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:49806 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=a8380a6e57993752.S.1.t/JyWdE4uud3Rz3Hs5T...(115 chars)
+[02:08:00.914] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:49806 [HMAC OK, sessão a8380a6e57993752] UPDATE servidor11 192.168.0.110
+[02:08:00.915] [dns-servidor] INFO  BINDING DINÂMICO: servidor11 (novo) -> 192.168.0.110 (HMAC do registrador validado)
+[02:08:00.915] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:49806 [AES-CBC+HMAC] OK UPDATED servidor11 192.168.0.110 | pacote=a8380a6e57993752.S.2.38q0fFC+AkH4+G1Xr4L...(155 chars)
+[02:08:00.923] [dns-servidor] INFO  Notificando 0 assinante(s): servidor11 -> 192.168.0.110
+[02:08:01.137] [dns-servidor] INFO  HELLO de /127.0.0.1:46629 -> chave pública RSA enviada
+[02:08:01.279] [dns-servidor] INFO  Handshake: sessão c64327eaa2e829be criada para /127.0.0.1:46629 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:08:01.281] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:46629 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=c64327eaa2e829be.S.1.qRtTrgzfD3blNsnMDaY...(115 chars)
+[02:08:01.331] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:46629 [HMAC OK, sessão c64327eaa2e829be] QUERY servidor11
+[02:08:01.332] [dns-servidor] INFO  Resolução: servidor11 -> 192.168.0.110
+[02:08:01.336] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:46629 [AES-CBC+HMAC] ANSWER servidor11 192.168.0.110 | pacote=c64327eaa2e829be.S.2.W2ZhO7a21Nt+tZdtgpd...(135 chars)
+[02:08:01.476] [dns-servidor] INFO  HELLO de /127.0.0.1:45310 -> chave pública RSA enviada
+[02:08:01.597] [dns-servidor] INFO  Handshake: sessão fa8bf13f231f919d criada para /127.0.0.1:45310 (chaves AES+HMAC decifradas com a chave privada RSA)
+[02:08:01.605] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:45310 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=fa8bf13f231f919d.S.1.gt7KYRyPxME1d/+FFcv...(115 chars)
+[02:08:01.663] [dns-servidor] INFO  RECEBIDO <- /127.0.0.1:45310 [HMAC OK, sessão fa8bf13f231f919d] UPDATE servidor2 192.168.0.222
+[02:08:01.666] [dns-servidor] INFO  BINDING DINÂMICO: servidor2 192.168.0.20 -> 192.168.0.222 (HMAC do registrador validado)
+[02:08:01.668] [dns-servidor] INFO  ENVIADO  -> /127.0.0.1:45310 [AES-CBC+HMAC] OK UPDATED servidor2 192.168.0.222 | pacote=fa8bf13f231f919d.S.2.G7seh1IHnnlWKg6YHUc...(155 chars)
+[02:08:01.668] [dns-servidor] INFO  Notificando 0 assinante(s): servidor2 -> 192.168.0.222

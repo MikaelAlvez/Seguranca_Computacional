@@ -1,0 +1,48 @@
+
+################ Q3 CASO 3 - falha de integridade / pacote adulterado ################
+
+################ CASO 3 - falha de integridade: texto cifrado alterado no canal (P4 -> P5) ################
+   ---- P4 (origem, corrompe o que envia) ----
+   [21:25:04.753] [p2p-P4] INFO  BUSCA iniciada em P4: arquivo5.ext
+   [21:25:04.772] [p2p-P4] INFO  P4 NÃO é responsável por arquivo5.ext (minha faixa: 41-50) -> repassando ao sucessor P5 (salto 1)
+   [21:25:04.794] [p2p-P4] INFO  Estabelecendo canal seguro P4 -> P5 (handshake RSA, chaves AES+HMAC)
+   [21:25:05.004] [p2p-P4] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:9105
+   [21:25:05.040] [p2p-P4] SEGUR ENVIADO  -> /127.0.0.1:9105 pacote ADULTERADO (CIFRADO_ADULTERADO) para teste: BUSCA|4|arquivo5.ext|1
+   [21:25:10.044] [p2p-P4] ERRO  Sem resposta em 5 s para arquivo5.ext: a busca não voltou (algum nó do anel está inacessível ou o pacote foi descartado por falha de integridade).
+   ---- P5 (detecta e descarta) ----
+   [21:25:05.001] [p2p-P5] INFO  ENVIADO  -> /127.0.0.1:44954 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=dac78352368d6043.S.1.pWd0m+Av+05x45vzL8z...(115 chars)
+   [21:25:05.031] [p2p-P5] SEGUR RECEBIDO <- /127.0.0.1:44954 [HMAC/INTEGRIDADE FALHOU] HMAC inválido: mensagem adulterada ou sem a chave correta
+   [21:25:05.034] [p2p-P5] SEGUR FALHA DE AUTENTICAÇÃO/INTEGRIDADE no enlace /127.0.0.1:44954: HMAC inválido: mensagem adulterada ou sem a chave correta -> pacote DESCARTADO; repasse INTERROMPIDO (nada é p...
+   ---- P0 (não deve receber nada) ----
+
+C3-01  texto cifrado : P5 detecta a falha de autenticação/integridade ... esperado=true                   obtido=true                   OK
+C3-02  texto cifrado : P5 descarta o pacote e interrompe o repasse        esperado=true                   obtido=true                   OK
+C3-03  texto cifrado : P5 NÃO repassou a P0 (nenhum 'repassando')         esperado=true                   obtido=true                   OK
+C3-04  texto cifrado : P0, P1, P2 e P3 sem nenhuma linha nova             esperado=true                   obtido=true                   OK
+C3-05  texto cifrado : a origem P4 fica sem resposta (timeout tratado)    esperado=true                   obtido=true                   OK
+C3-06  texto cifrado : P5 ainda busca arquivo3.ext em P0 (1 salto)        esperado=-> P0: conteudo-sim... obtido=-> P0: conteudo-sim... OK
+C3-07  texto cifrado : P4 ainda acha arquivo45.ext localmente (0 salto)   esperado=-> P4: conteudo-sim... obtido=-> P4: conteudo-sim... OK
+
+################ CASO 3 - falha de integridade: HMAC inválido (P4 -> P5) ################
+   ---- P4 (origem, corrompe o que envia) ----
+   [21:25:17.935] [p2p-P4] INFO  BUSCA iniciada em P4: arquivo5.ext
+   [21:25:17.956] [p2p-P4] INFO  P4 NÃO é responsável por arquivo5.ext (minha faixa: 41-50) -> repassando ao sucessor P5 (salto 1)
+   [21:25:17.967] [p2p-P4] INFO  Estabelecendo canal seguro P4 -> P5 (handshake RSA, chaves AES+HMAC)
+   [21:25:18.204] [p2p-P4] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:9105
+   [21:25:18.249] [p2p-P4] SEGUR ENVIADO  -> /127.0.0.1:9105 pacote ADULTERADO (MAC_CORROMPIDO) para teste: BUSCA|4|arquivo5.ext|1
+   [21:25:23.255] [p2p-P4] ERRO  Sem resposta em 5 s para arquivo5.ext: a busca não voltou (algum nó do anel está inacessível ou o pacote foi descartado por falha de integridade).
+   ---- P5 (detecta e descarta) ----
+   [21:25:18.200] [p2p-P5] INFO  ENVIADO  -> /127.0.0.1:51132 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=63a8663af4a77854.S.1.W4q4IVMvvyoqA64OYIS...(115 chars)
+   [21:25:18.228] [p2p-P5] SEGUR RECEBIDO <- /127.0.0.1:51132 [HMAC/INTEGRIDADE FALHOU] HMAC inválido: mensagem adulterada ou sem a chave correta
+   [21:25:18.246] [p2p-P5] SEGUR FALHA DE AUTENTICAÇÃO/INTEGRIDADE no enlace /127.0.0.1:51132: HMAC inválido: mensagem adulterada ou sem a chave correta -> pacote DESCARTADO; repasse INTERROMPIDO (nada é p...
+   ---- P0 (não deve receber nada) ----
+
+C3-01  HMAC inválido: P5 detecta a falha de autenticação/integridade e... esperado=true                   obtido=true                   OK
+C3-02  HMAC inválido: P5 descarta o pacote e interrompe o repasse         esperado=true                   obtido=true                   OK
+C3-03  HMAC inválido: P5 NÃO repassou a P0 (nenhum 'repassando')          esperado=true                   obtido=true                   OK
+C3-04  HMAC inválido: P0, P1, P2 e P3 sem nenhuma linha nova              esperado=true                   obtido=true                   OK
+C3-05  HMAC inválido: a origem P4 fica sem resposta (timeout tratado)     esperado=true                   obtido=true                   OK
+C3-06  HMAC inválido: P5 ainda busca arquivo3.ext em P0 (1 salto)         esperado=-> P0: conteudo-sim... obtido=-> P0: conteudo-sim... OK
+C3-07  HMAC inválido: P4 ainda acha arquivo45.ext localmente (0 salto)    esperado=-> P4: conteudo-sim... obtido=-> P4: conteudo-sim... OK
+
+=== RESULTADO: 14/14 verificações passaram ===

@@ -1,0 +1,79 @@
+
+################ Q4 CASO 2 - TTL e INVALIDATE ################
+>>> Parte A: TTL. GET (MISS) -> GET (HIT) -> espera 11 s -> GET (MISS por expiração)
+[22:08:43.103] [cdn-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=79bd0b8dc163034c)
+[22:08:43.234] [cdn-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:08:43.281] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=79bd0b8dc163034c.C.1.3/RAP4aRFjFDtRH5kmi...(135 chars)
+[22:08:43.620] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo...(1057 chars)
+[22:08:43.645] [cdn-cliente-C1] INFO  RESPOSTA para GET /arquivo30.ext em 386.6 ms -> 200 OK | Cache: MISS | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo30.ext | [v1] Conte...(1024 chars)
+[22:08:43.646] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=79bd0b8dc163034c.C.2.OmRsOjmKGNIXaZcZSmI...(135 chars)
+[22:08:43.656] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo ...(1056 chars)
+[22:08:43.657] [cdn-cliente-C1] INFO  RESPOSTA para GET /arquivo30.ext em 10.8 ms -> 200 OK | Cache: HIT | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo30.ext | [v1] Conte...(1024 chars)
+[22:08:43.661] [cdn-cliente-C1] INFO  Aguardando 11 s...
+[22:08:54.665] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=79bd0b8dc163034c.C.3.Jr+2mdEzA8+LcFPogIO...(135 chars)
+[22:08:54.815] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo...(1057 chars)
+[22:08:54.817] [cdn-cliente-C1] INFO  RESPOSTA para GET /arquivo30.ext em 155.1 ms -> 200 OK | Cache: MISS | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo30.ext | [v1] Conte...(1024 chars)
+
+>>> Parte B: INVALIDATE ativo. GET (HIT) -> Origem atualiza o arquivo e invalida -> GET (MISS, versão nova)
+[22:08:55.103] [cdn-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=41ff3305f3849688)
+[22:08:55.135] [cdn-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:08:55.162] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=41ff3305f3849688.C.1.5M5U6bSIn5Nh5B9xE3E...(135 chars)
+[22:08:55.172] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo ...(1056 chars)
+[22:08:55.193] [cdn-cliente-C1] INFO  RESPOSTA para GET /arquivo30.ext em 37.0 ms -> 200 OK | Cache: HIT | Length: 1024 | corpo: [v1] Conteudo mestre do arquivo30.ext | [v1] Conte...(1024 chars)
+[22:08:56.172] [cdn-origem] INFO  Arquivo arquivo30.ext atualizado na origem para a versão v2
+[22:08:56.290] [cdn-origem] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=26b26c75f88cde11)
+[22:08:56.307] [cdn-origem] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:08:56.353] [cdn-origem] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] INVALIDATE /arquivo30.ext | pacote=26b26c75f88cde11.C.1.tKN9D8O8GJGJmtykA1G...(135 chars)
+[22:08:56.354] [cdn-origem] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nInvalidated: /arquivo30.ext
+[22:08:56.365] [cdn-origem] INFO  Edge:8001 respondeu: 200 OK\nInvalidated: /arquivo30.ext
+[22:08:56.624] [cdn-cliente-C1] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8001 (sid=2fc9afe838c093c2)
+[22:08:56.659] [cdn-cliente-C1] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8001
+[22:08:56.694] [cdn-cliente-C1] INFO  ENVIADO  -> /127.0.0.1:8001 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=2fc9afe838c093c2.C.1.KK6zPxy60eAysGGKr4t...(135 chars)
+[22:08:56.839] [cdn-cliente-C1] INFO  RECEBIDO <- /127.0.0.1:8001 [HMAC OK] 200 OK\nCache: MISS\nLength: 1024\n\n[v2] Conteudo mestre do arquivo30.ext | [v2] Conteudo...(1057 chars)
+[22:08:56.862] [cdn-cliente-C1] INFO  RESPOSTA para GET /arquivo30.ext em 180.7 ms -> 200 OK | Cache: MISS | Length: 1024 | corpo: [v2] Conteudo mestre do arquivo30.ext | [v2] Conte...(1024 chars)
+
+----- logs/cdn-edge-8001.log -----
+===== nova execução: 2026-10-18T22:08:39.753114909 =====
+[22:08:39.842] [cdn-edge-8001] INFO  Edge edge-8001 pronto na porta 8001 (cache vazio, TTL=10 s)
+[22:08:43.168] [cdn-edge-8001] INFO  Handshake: chaves da sessão 79bd0b8dc163034c decifradas com a chave privada RSA (cliente /127.0.0.1:35020)
+[22:08:43.228] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:35020 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=79bd0b8dc163034c.S.1.fhRK/5O6vLV2APvo2Xa...(115 chars)
+[22:08:43.278] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:35020 [HMAC OK] GET /arquivo30.ext
+[22:08:43.285] [cdn-edge-8001] INFO  CACHE MISS: /arquivo30.ext -> abrindo canal TCP seguro com a Origem (AES+HMAC)
+[22:08:43.308] [cdn-edge-8001] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8000 (sid=3043ba3407253d50)
+[22:08:43.424] [cdn-edge-8001] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8000
+[22:08:43.426] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:8000 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=3043ba3407253d50.C.1.QURotstM51lbAhCIK3Y...(135 chars)
+[22:08:43.582] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:8000 [HMAC OK] 200 OK\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo mestre do ar...(1045 chars)
+[22:08:43.607] [cdn-edge-8001] INFO  CACHE MISS resolvido: /arquivo30.ext baixado da Origem e salvo no cache em 302.49 ms (expira em 10 s)
+[22:08:43.618] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:35020 [AES-CBC+HMAC] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo...(1057 chars) | pacote=79bd0b8dc163034c.S.2.U2Uo5JRsIxEXb+Uia5Y...(1523 chars)
+[22:08:43.647] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:35020 [HMAC OK] GET /arquivo30.ext
+[22:08:43.648] [cdn-edge-8001] INFO  CACHE HIT : /arquivo30.ext servido da memória em 0.01 ms
+[22:08:43.653] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:35020 [AES-CBC+HMAC] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo ...(1056 chars) | pacote=79bd0b8dc163034c.S.3.Dv0FisG6p1+hMUhlKXt...(1523 chars)
+[22:08:53.803] [cdn-edge-8001] INFO  TTL EXPIROU: /arquivo30.ext removido do cache (TTL=10 s)
+[22:08:54.665] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:35020 [HMAC OK] GET /arquivo30.ext
+[22:08:54.665] [cdn-edge-8001] INFO  CACHE MISS: /arquivo30.ext -> abrindo canal TCP seguro com a Origem (AES+HMAC)
+[22:08:54.669] [cdn-edge-8001] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8000 (sid=f56b82942eff9eb8)
+[22:08:54.680] [cdn-edge-8001] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8000
+[22:08:54.681] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:8000 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=f56b82942eff9eb8.C.1.+3wLGUw6dqI3glgkxwY...(135 chars)
+[22:08:54.808] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:8000 [HMAC OK] 200 OK\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo mestre do ar...(1045 chars)
+[22:08:54.809] [cdn-edge-8001] INFO  CACHE MISS resolvido: /arquivo30.ext baixado da Origem e salvo no cache em 143.61 ms (expira em 10 s)
+[22:08:54.811] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:35020 [AES-CBC+HMAC] 200 OK\nCache: MISS\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo...(1057 chars) | pacote=79bd0b8dc163034c.S.4.YNjN1+QjsjsLKT5uIe0...(1523 chars)
+[22:08:55.083] [cdn-edge-8001] INFO  Handshake: chaves da sessão 41ff3305f3849688 decifradas com a chave privada RSA (cliente /127.0.0.1:53082)
+[22:08:55.083] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:53082 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=41ff3305f3849688.S.1.SoVjMFLIww5dpPPvL3I...(115 chars)
+[22:08:55.157] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:53082 [HMAC OK] GET /arquivo30.ext
+[22:08:55.160] [cdn-edge-8001] INFO  CACHE HIT : /arquivo30.ext servido da memória em 0.00 ms
+[22:08:55.167] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:53082 [AES-CBC+HMAC] 200 OK\nCache: HIT\nLength: 1024\n\n[v1] Conteudo mestre do arquivo30.ext | [v1] Conteudo ...(1056 chars) | pacote=41ff3305f3849688.S.2.m6qwuhsV3Xz0cr029jG...(1523 chars)
+[22:08:56.292] [cdn-edge-8001] INFO  Handshake: chaves da sessão 26b26c75f88cde11 decifradas com a chave privada RSA (cliente /127.0.0.1:53086)
+[22:08:56.293] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:53086 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=26b26c75f88cde11.S.1.TI3OPvXnreN8PEmoMSQ...(115 chars)
+[22:08:56.345] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:53086 [HMAC OK] INVALIDATE /arquivo30.ext
+[22:08:56.345] [cdn-edge-8001] INFO  INVALIDATE da Origem (HMAC validado): /arquivo30.ext removido do cache
+[22:08:56.346] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:53086 [AES-CBC+HMAC] 200 OK\nInvalidated: /arquivo30.ext | pacote=26b26c75f88cde11.S.2.65chGsF89kBB5FqZ9A6...(155 chars)
+[22:08:56.611] [cdn-edge-8001] INFO  Handshake: chaves da sessão 2fc9afe838c093c2 decifradas com a chave privada RSA (cliente /127.0.0.1:53102)
+[22:08:56.611] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:53102 [AES-CBC+HMAC] HANDSHAKE_OK | pacote=2fc9afe838c093c2.S.1.RSdgdGNw5SxuJVWY3zj...(115 chars)
+[22:08:56.687] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:53102 [HMAC OK] GET /arquivo30.ext
+[22:08:56.687] [cdn-edge-8001] INFO  CACHE MISS: /arquivo30.ext -> abrindo canal TCP seguro com a Origem (AES+HMAC)
+[22:08:56.701] [cdn-edge-8001] INFO  Handshake: chaves AES+HMAC sorteadas e enviadas cifradas com RSA-2048 para 127.0.0.1:8000 (sid=a8bcd84bfae3f6e9)
+[22:08:56.710] [cdn-edge-8001] INFO  Handshake concluído: canal AES+HMAC estabelecido com 127.0.0.1:8000
+[22:08:56.711] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:8000 [AES-CBC+HMAC] GET /arquivo30.ext | pacote=a8bcd84bfae3f6e9.C.1.6epEHhhqY+8u13wSHwP...(135 chars)
+[22:08:56.834] [cdn-edge-8001] INFO  RECEBIDO <- /127.0.0.1:8000 [HMAC OK] 200 OK\nLength: 1024\n\n[v2] Conteudo mestre do arquivo30.ext | [v2] Conteudo mestre do ar...(1045 chars)
+[22:08:56.835] [cdn-edge-8001] INFO  CACHE MISS resolvido: /arquivo30.ext baixado da Origem e salvo no cache em 147.69 ms (expira em 10 s)
+[22:08:56.840] [cdn-edge-8001] INFO  ENVIADO  -> /127.0.0.1:53102 [AES-CBC+HMAC] 200 OK\nCache: MISS\nLength: 1024\n\n[v2] Conteudo mestre do arquivo30.ext | [v2] Conteudo...(1057 chars) | pacote=2fc9afe838c093c2.S.2.OHIdEYcmwb8EVcCKHet...(1523 chars)

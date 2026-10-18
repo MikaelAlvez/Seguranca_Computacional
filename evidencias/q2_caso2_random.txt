@@ -1,0 +1,14 @@
+
+################ Q2 CASO 2 (variante) - balanceamento RANDOM ################
+[02:01:50.093] [calc-cliente-C1] INFO  RESULTADO: 1 + 1 = 2  (calculado por S2 em canal seguro AES+HMAC)
+[02:01:50.512] [calc-cliente-C1] INFO  RESULTADO: 2 + 2 = 4  (calculado por S2 em canal seguro AES+HMAC)
+[02:01:50.908] [calc-cliente-C1] INFO  RESULTADO: 3 + 3 = 6  (calculado por S2 em canal seguro AES+HMAC)
+[02:01:51.336] [calc-cliente-C1] INFO  RESULTADO: 4 + 4 = 8  (calculado por S1 em canal seguro AES+HMAC)
+[02:01:51.750] [calc-cliente-C1] INFO  RESULTADO: 5 + 5 = 10  (calculado por S2 em canal seguro AES+HMAC)
+[02:01:52.197] [calc-cliente-C1] INFO  RESULTADO: 6 + 6 = 12  (calculado por S1 em canal seguro AES+HMAC)
+[02:01:52.625] [calc-cliente-C1] INFO  RESULTADO: 7 + 7 = 14  (calculado por S2 em canal seguro AES+HMAC)
+[02:01:53.190] [calc-cliente-C1] INFO  RESULTADO: 8 + 8 = 16  (calculado por S2 em canal seguro AES+HMAC)
+[02:01:53.687] [calc-cliente-C1] INFO  RESULTADO: 9 + 9 = 18  (calculado por S1 em canal seguro AES+HMAC)
+[02:01:54.087] [calc-cliente-C1] INFO  RESULTADO: 10 + 10 = 20  (calculado por S1 em canal seguro AES+HMAC)
+
+S1 processou 4 | S2 processou 6  (sorteio: a divisão varia a cada execução, mas ambos recebem chamadas)
